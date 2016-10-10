@@ -28,7 +28,7 @@ def instructor_numbers(dept_id):
     cur.close()
     conn.close()
     for key in departmentDict:
-        print(key, ": ", departmentDict[key])
+        print(key, ":P", departmentDict[key])
 
 if __name__ == "__main__":
     instructor_numbers("APMA")

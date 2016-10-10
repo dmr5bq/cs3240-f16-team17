@@ -1,4 +1,8 @@
-﻿# Byte-compiled / optimized / DLL files
+﻿# stuff copied from my other git_ignore
+ *.pyc
+ config.txt
+ 
+ # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class

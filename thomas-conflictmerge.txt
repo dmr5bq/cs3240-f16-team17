@@ -1,0 +1,9 @@
+@@ -2,7 +2,7 @@
+  import psycopg2
+  import sys
+  
+ -PG_USER = "postgre"
+ +PG_USER = "postgres"
+  PG_USER_PASS = sys.arv[1]
+  PG_DATABASE = "course1"
+  PG_HOST_INFO = " host=/tmp/" # use "" for OS X or Windows

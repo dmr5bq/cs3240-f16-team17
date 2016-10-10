@@ -1,4 +1,5 @@
 import psycopg2
+import sys
 
 # NOTE: before running this program, you must create the database named below from
 # the command-line (i.e. outside of Python or psql).
@@ -7,7 +8,7 @@ import psycopg2
 # and give the password: wombat
 
 PG_USER = "postgres"
-PG_USER_PASS = "41740284"
+PG_USER_PASS = sys.argv[1]
 PG_DATABASE = "mydb1"
 PG_HOST_INFO = " host=/tmp/" # use "" for OS X or Windows
 

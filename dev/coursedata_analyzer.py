@@ -4,6 +4,7 @@ import sys
 PG_USER = "postgres"
 <<<<<<< HEAD
 PG_USER_PASS = "555555"#asdf
+#fixing issue 3
 =======
 PG_USER_PASS = sys.argv[1]
 >>>>>>> origin/master

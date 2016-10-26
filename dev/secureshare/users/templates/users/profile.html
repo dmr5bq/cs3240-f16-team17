@@ -1,6 +1,7 @@
 {% if user.is_authenticated %}
     <p> Welcome {{ user.first_name }}</p>
     <p>Change your password <a href="{% url 'change-password' %}">here</a></p>
+    <p>Logout <a href="{% url 'logout' %}">here</a></p>
 
 
 {% else %}

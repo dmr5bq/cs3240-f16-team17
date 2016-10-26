@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import update_session_auth_hash
 
-from .forms import RegisterUserForm
-from .models import User
+from .forms import RegisterUserForm, ChangePasswordForm
 
 
 def register(request):
@@ -16,3 +16,23 @@ def register(request):
     form_title = 'Create New User'
     form_action = '/users/register/'
     return render(request, 'users/general_form.html', {'form': form, 'form_title':form_title, 'form_action':form_action})
+
+
+def profile(request):
+    template_name = 'users/profile.html'
+    return render(request, template_name)
+
+
+def change_password(request):
+    if request.method == 'POST':
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            update_session_auth_hash(request, user)
+            return redirect('profile')
+    else:
+        form = ChangePasswordForm()
+    form_title = 'Change password'
+    form_action = '/users/change_password/'
+    return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_action': form_action})

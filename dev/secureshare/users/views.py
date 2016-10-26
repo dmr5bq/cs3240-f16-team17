@@ -25,14 +25,14 @@ def profile(request):
 
 def change_password(request):
     if request.method == 'POST':
-        form = ChangePasswordForm(request.POST)
+        form = ChangePasswordForm(user=request.user, data=request.POST)
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
             return redirect('profile')
     else:
-        form = ChangePasswordForm()
+        form = ChangePasswordForm(user=request.user, data=request.POST)
     form_title = 'Change password'
     form_action = '/users/change_password/'
     return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_action': form_action})

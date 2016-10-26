@@ -44,26 +44,21 @@ class RegisterUserForm(forms.Form):
 
 
 class ChangePasswordForm(forms.Form):
-    email = forms.EmailField(required=True)
     current_password = forms.CharField(label=_("Current Password"), widget=forms.PasswordInput)
     new_password1 = forms.CharField(label=_("New Password"), widget=forms.PasswordInput)
     new_password2 = forms.CharField(label=_("New Password (again)"), widget=forms.PasswordInput)
 
-    def clean_email(self):
-        try:
-            User.objects.get(email=self.cleaned_data['email'])
-            pass
-        except User.DoesNotExist:
-            raise forms.ValidationError("User with this email does not exist")
-        return self.cleaned_data['email']
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(ChangePasswordForm, self).__init__(*args, **kwargs)
 
     def clean_current_password(self):
         try:
-            user = authenticate(email=self.cleaned_data['email'], password=self.cleaned_data['current_password'])
+            user = authenticate(email=self.user.email, password=self.cleaned_data['current_password'])
             if user is None:
-                raise forms.ValidationError(_("The email and password do not match"))
+                raise forms.ValidationError(_("Incorrect Password."))
         except PermissionDenied:
-            raise forms.ValidationError(_("The email and password do not match"))
+            raise forms.ValidationError(_("Incorrect Password."))
 
     def clean_new_password2(self):
         new_password1 = self.cleaned_data.get('new_password1')
@@ -74,12 +69,11 @@ class ChangePasswordForm(forms.Form):
         return new_password2
 
     def save(self, commit=True):
-        user = User.objects.get(email=self.cleaned_data['email'])
-        user.set_password(self.cleaned_data['new_password1'])
+        self.user.set_password(self.cleaned_data['new_password1'])
 
         if commit:
-            user.save()
+            self.user.save()
 
-        return user
+        return self.user
 
 

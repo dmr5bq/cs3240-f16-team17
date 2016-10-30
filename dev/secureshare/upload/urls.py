@@ -5,6 +5,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^form/', views.upload_file, name='upload_file')
+    url(r'^success', views.success, name='success'),
 ]
 

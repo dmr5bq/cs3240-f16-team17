@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-
+    <form action="/upload/" method="post"> {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload your file</button>
+    </form>
 </body>
 </html>

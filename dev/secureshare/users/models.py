@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
+from django.utils.translation import gettext as _
 
 class UserManager(BaseUserManager):
     def create_user(self, email=None, password=None):
@@ -32,6 +32,19 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=40, null=True)
     last_name = models.CharField(max_length=40, null=True)
 
+    # GROUPS B O Y S
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name=_('groups'),
+        blank=True,
+        help_text=_(
+            'The groups this user belongs to. A user will get all permissions '
+            'granted to each of their groups.'
+        ),
+        related_name="user_set",
+        related_query_name="user",
+    )
+
     # Site Manager Fields
     is_site_manager = models.BooleanField(default=False)
 
@@ -39,7 +52,3 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-
-
-
-

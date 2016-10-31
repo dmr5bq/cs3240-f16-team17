@@ -2,7 +2,24 @@
     <p> Welcome {{ user.first_name }}</p>
     <p>Change your password <a href="{% url 'change-password' %}">here</a></p>
     <p>Logout <a href="{% url 'logout' %}">here</a></p>
-
+    <p>Create new Group <a href="{% url 'create_group' %}">here</a></p>
+    <p>Join existing Group <a href="{% url 'join_group' %}">here</a></p>
+    <p>You are part of these Groups:</p>
+    <ul>
+    {% if user.groups.all|length > 0 %}
+        {% for group in user.groups.all %}
+            {% if group.name|length != 0 %}
+                <li>
+                    <strong>{{ group.name }}</strong>
+                </li>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <li>
+            <strong>You currently are not in a group</strong>
+        </li>
+    {% endif %}
+    </ul>
 
 {% else %}
     <p>You are not logged in, so you can't see your profile</p>

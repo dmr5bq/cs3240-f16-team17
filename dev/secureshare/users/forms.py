@@ -4,7 +4,40 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
 from .models import User
+from django.contrib.auth.models import Group
 
+class JoinGroupForm(forms.Form):
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False)
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(JoinGroupForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        self.user.groups.clear()
+        for group in self.cleaned_data['groups']:
+            g = Group.objects.get(name=group.name)
+            self.user.groups.add(g)
+        if commit:
+            self.user.save()
+
+        return self.user
+
+class CreateGroupForm(forms.Form):
+    name = forms.CharField(max_length=80)
+
+    def clean_name(self):
+        try:
+            Group.objects.get(name=self.cleaned_data['name'])
+            raise forms.ValidationError("Group with this name already exists")
+        except Group.DoesNotExist:
+            pass
+        return self.cleaned_data['name']
+
+    def save(self, commit=True):
+        group = Group.objects.get_or_create(name=self.cleaned_data['name'])
+
+        return group
 
 class RegisterUserForm(forms.Form):
     email = forms.EmailField(required=True)

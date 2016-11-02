@@ -11,7 +11,7 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
-            return redirect('login')
+            return redirect('users:login')
     else:
         form = RegisterUserForm()
     form_title = 'Create New User'
@@ -33,7 +33,7 @@ def change_password(request):
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
-            return redirect('profile')
+            return redirect('users:profile')
     else:
         form = ChangePasswordForm(user=request.user, data=request.POST)
     form_title = 'Change password'
@@ -49,7 +49,7 @@ def join_group(request):
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
-            return redirect('profile')
+            return redirect('users:profile')
     else:
         form = JoinGroupForm(user=request.user, data=request.POST)
     form_title = 'Join New Group'
@@ -64,7 +64,7 @@ def create_group(request):
         form = CreateGroupForm(request.POST)
         if form.is_valid():
             form.save(commit=False)
-            return redirect('profile')
+            return redirect('users:profile')
     else:
         form = CreateGroupForm()
     form_title = 'Create New Group'

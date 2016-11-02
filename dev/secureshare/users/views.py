@@ -107,6 +107,14 @@ def suspend_user(request, user_id):
     return redirect('users:user', user_id=user.id)
 
 
+def promote_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.user.is_site_manager:
+        user.is_site_manager = not user.is_site_manager
+        user.save()
+    return redirect('users:user', user_id=user.id)
+
+
 def all_groups(request):
     template_name = 'users/all_groups.html'
 

@@ -19,5 +19,6 @@ urlpatterns = [
     url(r'^user/(?P<user_id>[0-9]+)/$', view_user, name='user'),
     url(r'^group/(?P<group_id>[0-9]+)/$', view_group, name='group'),
 
-    url(r'^user/(?P<user_id>[0-9]+)/suspend/$', suspend_user, name='suspend_user')
+    url(r'^user/(?P<user_id>[0-9]+)/suspend/$', suspend_user, name='suspend_user'),
+    url(r'^user/(?P<user_id>[0-9]+)/promote/$', promote_user, name='promote_user'),
 ]

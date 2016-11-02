@@ -4,7 +4,10 @@
     <div class="row">
         <div class="col-sm-8 col-md-8 col-lg-8 col-centered">
             {% if user.is_authenticated %}
-
+                <div class="list-group">
+                    <li class="list-group-item">{{ viewed_user.first_name }}{{ viewed_user.last_name }}</li>
+                </div>
+                <br>
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">Groups:</li>
                     {% if groups %}
@@ -17,6 +20,14 @@
                 </div>
             {% else %}
             <p>You must login to view this page.</p>
+            {% endif %}
+            <br>
+            {% if user.is_site_manager %}
+                {% if viewed_user.is_suspended %}
+                <a href="{% url 'users:suspend_user' user_id=viewed_user.id %}" role="button" class="btn btn-danger btn-lg">Remove suspension</a>
+                {% else %}
+                <a href="{% url 'users:suspend_user' user_id=viewed_user.id %}" role="button" class="btn btn-danger btn-lg">Suspend this user</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>

@@ -47,6 +47,7 @@ class User(AbstractBaseUser):
 
     # Site Manager Fields
     is_site_manager = models.BooleanField(default=False)
+    is_suspended = models.BooleanField(default=False)
 
     # Objects Manager Class
     objects = UserManager()

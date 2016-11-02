@@ -93,10 +93,18 @@ def view_user(request, user_id):
     user = get_object_or_404(User, pk=user_id)
 
     context = {}
-    context['user'] = user
+    context['viewed_user'] = user
     context['groups'] = user.groups.all()
 
     return render(request, template_name, context)
+
+
+def suspend_user(request, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.user.is_site_manager:
+        user.is_suspended = not user.is_suspended
+        user.save()
+    return redirect('users:user', user_id=user.id)
 
 
 def all_groups(request):

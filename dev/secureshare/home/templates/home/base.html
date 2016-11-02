@@ -50,14 +50,14 @@
 
                 {% if user.is_authenticated %}
                     <li><a href="#">Reports - x</a></li>
-                    <li><a href="#">Groups - x</a></li>
-                    <li><a href={% url 'users:profile' %}>Profile</a></li>
+                    <li><a href="{% url 'users:all_groups'%}">Groups</a></li>
+
 
                     {% if user.is_site_manager %}
-                    <li><a href="#">Users</a></li>
-                    <li><a href="#">Admin</a></li>
+                    <li><a href="{% url 'users:all_users'%}">Users</a></li>
                     {% endif %}
 
+                    <li><a href={% url 'users:profile' %}>Profile</a></li>
                     <li><a href={% url 'users:logout' %}>Logout</a></li>
                 {% else %}
                     <li><a href={% url 'users:login' %}>Login</a></li>

@@ -1,0 +1,22 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-8 col-md-8 col-lg-8 col-centered">
+            {% if user.is_site_manager %}
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">All Users:</li>
+                    {% if users %}
+                        {% for user in users %}
+                            <a href="{% url 'users:user' user_id=user.id %}" class="list-group-item list-group-item-action">{{ user.first_name }} {{ user.last_name }}</a>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">There are no users.</li>
+                    {% endif %}
+                </div>
+            {% else %}
+            <p>You do not have permission to view this page.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

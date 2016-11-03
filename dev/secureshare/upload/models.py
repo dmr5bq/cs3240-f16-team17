@@ -5,14 +5,14 @@ from datetime import *
 # Create your models here.
 
 class FileUpload(models.Model):
-    upload_id = models.AutoField(primary_key=True)
+    upload_id = models.AutoField(primary_key=True, default=0)
     title = models.TextField(default='title')
     file = models.FileField(default=None)
     timestamp = models.DateTimeField(default=datetime.now())
 
 
 class Report(models.Model):
-    report_id = models.AutoField(primary_key=True)
+    report_id = models.AutoField(primary_key=True, default=0)
     title = models.TextField(default="None")
     encrypted = models.BooleanField(default=False)
     file = models.BinaryField(default=bin(0))

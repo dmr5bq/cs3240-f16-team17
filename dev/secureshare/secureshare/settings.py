@@ -108,6 +108,10 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_REDIRECT_URL = "/users/profile"
 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 

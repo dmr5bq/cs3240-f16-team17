@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, loader
-from .forms import UploadFileForm
+from .forms import UploadFileForm, ReportForm
 
 """
 10/30 DMR - there is some problem with form validation, so the form is not being stored at the moment
@@ -47,3 +47,19 @@ def success(request):
     template = loader.get_template('upload/success.html')
     return render(template.render(request))
 
+def register_report(request):
+
+    if request.method == 'POST':
+
+        form = ReportForm(request.POST, request.FILES)
+
+        if form.is_valid():
+
+            form.save()
+
+            return HttpResponseRedirect('upload/success')
+    else:
+
+        form = ReportForm()
+
+        return render(request, 'upload/report.html', {'form': form})

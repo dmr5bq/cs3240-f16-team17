@@ -10,6 +10,8 @@ urlpatterns = [
     url(r'^profile/$', profile, name='profile'),
     url(r'^change_password/$', change_password, name='change-password'),
 
+
+
     url(r'^create_group/$', create_group, name='create_group'),
     url(r'^join_group/$', join_group, name='join_group'),
 
@@ -21,4 +23,13 @@ urlpatterns = [
 
     url(r'^user/(?P<user_id>[0-9]+)/suspend/$', suspend_user, name='suspend_user'),
     url(r'^user/(?P<user_id>[0-9]+)/promote/$', promote_user, name='promote_user'),
+    url(r'^user/(?P<user_id>[0-9]+)/(?P<group_id>[0-9]+)/remove_from_group/$', remove_user_from_group, name='remove_user_from_group'),
+    url(r'^user/(?P<group_id>[0-9]+)/add_user_to_group/$', add_user_to_group, name='add_user_to_group'),
+
 ]
+
+'''
+url(r'^inbox/$', inbox, name='inbox'),
+url(r'^outbox/$', outbox, name='outbox'),
+url(r'^send_message/$', send_message, name='send_message'),
+'''

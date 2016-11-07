@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from .models import User
+from .models import User, Message
 from django.contrib.auth.models import Group
+
+from django.shortcuts import get_object_or_404
 
 class JoinGroupForm(forms.Form):
     groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False)
@@ -22,6 +24,22 @@ class JoinGroupForm(forms.Form):
             self.user.save()
 
         return self.user
+
+class AddUserToGroupForm(forms.Form):
+    users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(AddUserToGroupForm, self).__init__(*args, **kwargs)
+
+    def save(self, group_id):
+        g = Group.objects.get(id=group_id)
+        for user in self.cleaned_data['users']:
+            u = User.objects.get(id=user.id)
+            print(u)
+            u.groups.add(g)
+            u.save()
+
+        return g
 
 class CreateGroupForm(forms.Form):
     name = forms.CharField(max_length=80)
@@ -74,6 +92,26 @@ class RegisterUserForm(forms.Form):
             user.save()
 
         return user
+
+'''
+class SendMessageForm(forms.Form):
+    receiver = forms.CharField(max_length=80)
+    content = forms.CharField(max_length=80)
+
+    def __init__(self, *args, **kwargs):
+        super(SendMessageForm, self).__init__(*args, **kwargs)
+
+    def save(self, sender):
+        id = self.cleaned_data['receiver']
+        receiver = get_object_or_404(User, pk=id)
+        content = self.cleaned_data['content']
+        msg = Message(
+            sender=sender,
+            receiver=receiver,
+            msg_content=content
+        )
+        msg.save()
+'''
 
 
 class ChangePasswordForm(forms.Form):

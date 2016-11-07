@@ -21,7 +21,12 @@
                     <li class="list-group-item list-group-item-info">Groups:</li>
                     {% if groups %}
                         {% for group in groups %}
-                            <a href="{% url 'users:group' group_id=group.id %}" class="list-group-item list-group-item-action">{{ group.name }}</a>
+                            {% if user.is_site_manager %}
+                                <a href="{% url 'users:group' group_id=group.id %}" class="list-group-item list-group-item-action">{{ group.name }}</a>
+                                <a href="{% url 'users:remove_user_from_group' user_id=viewed_user.id group_id=group.id%}" role="button" class="btn btn-danger btn-lg">&times</a>
+                            {% else %}
+                                <a href="{% url 'users:group' group_id=group.id %}" class="list-group-item list-group-item-action">{{ group.name }}</a>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <li class="list-group-item">This user is in no groups.</li>

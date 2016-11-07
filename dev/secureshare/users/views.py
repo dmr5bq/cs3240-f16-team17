@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 
-from .forms import RegisterUserForm, ChangePasswordForm, CreateGroupForm, JoinGroupForm
+from .forms import RegisterUserForm, ChangePasswordForm, CreateGroupForm, JoinGroupForm, SendMessageForm, AddUserToGroupForm
 from .models import *
+from django.http import HttpResponseRedirect
 
 
 def register(request):
@@ -59,6 +60,21 @@ def join_group(request):
                   {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
 
+def add_user_to_group(request, group_id):
+    if request.method == 'POST':
+        form = AddUserToGroupForm(data=request.POST)
+        if form.is_valid():
+            form.save(group_id=group_id)
+            return redirect('users:all_groups')
+    else:
+        form = AddUserToGroupForm(data=request.POST)
+    form_title = 'Add User To Group'
+    form_back = '/users/all_groups/'
+    form_action = '/users/user/' + str(group_id) + '/add_user_to_group/'
+    return render(request, 'users/general_form.html',
+                  {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
+
+
 def create_group(request):
     if request.method == 'POST':
         form = CreateGroupForm(request.POST)
@@ -83,7 +99,8 @@ def view_group(request, group_id):
     for user in User.objects.all():
         if group in user.groups.all():
             users.append(user)
-    context['users'] = users
+    context['viewed_users'] = users
+    context['user'] = request.user
 
     return render(request, template_name, context)
 
@@ -115,6 +132,14 @@ def promote_user(request, user_id):
     return redirect('users:user', user_id=user.id)
 
 
+def remove_user_from_group(request, user_id, group_id):
+    user = get_object_or_404(User, pk=user_id)
+    if request.user.is_site_manager:
+        g = Group.objects.get(id=group_id)
+        user.groups.remove(g)
+    return redirect('users:user', user_id=user.id)
+
+
 def all_groups(request):
     template_name = 'users/all_groups.html'
 
@@ -131,3 +156,38 @@ def all_users(request):
     context['users'] = User.objects.all()
 
     return render(request, template_name, context)
+
+
+
+'''
+def inbox(request):
+    template_name = 'users/inbox.html'
+    message_set = Message.objects.inbox(request.user)
+    return render(request, template_name, {'message_set': message_set},)
+
+
+def outbox(request):
+    template_name = 'users/outbox.html'
+
+    context = {}
+    context['users'] = User.objects.all()
+
+    return render(request, template_name, context)
+
+
+
+def send_message(request):
+    if request.method == 'POST':
+        form = SendMessageForm()
+        if form.is_valid():
+            form.save(sender=request.user)
+            return redirect('users:profile')
+
+    else:
+        form = SendMessageForm()
+    form_title = 'Send New Message'
+    form_back = '/users/outbox/'
+    form_action = '/users/outbox/'
+    return render(request, 'users/general_form.html',
+                  {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
+'''

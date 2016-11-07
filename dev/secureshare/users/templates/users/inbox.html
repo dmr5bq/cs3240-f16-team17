@@ -1,0 +1,27 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+    Inbox for {{ user.id }}
+
+    <p>Messages:</p>
+    <ul>
+    {% if message_set %}
+        {% for message in message_set %}
+            <li>
+                <strong>{{ message.msg_content }}</strong>
+            </li>
+        {% endfor %}
+    {% else %}
+        <li>
+            <strong>You currently have no messages</strong>
+        </li>
+    {% endif %}
+    </ul>
+
+{% else %}
+    <p>You are not logged in, so you can't see your profile</p>
+{% endif %}
+
+{% endblock %}

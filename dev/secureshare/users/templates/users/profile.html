@@ -8,6 +8,7 @@
     <p>Logout <a href="{% url 'users:logout' %}">here</a></p>
     <p>Create new Group <a href="{% url 'users:create_group' %}">here</a></p>
     <p>Join existing Group <a href="{% url 'users:join_group' %}">here</a></p>
+    <p>Leave a Group <a href="{% url 'users:leave_group' %}">here</a></p>
     <p>You are part of these Groups:</p>
     <ul>
     {% if user.groups.all|length > 0 %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 
-from .forms import RegisterUserForm, ChangePasswordForm, CreateGroupForm, JoinGroupForm
+from .forms import RegisterUserForm, ChangePasswordForm, CreateGroupForm, JoinGroupForm, LeaveGroupForm
 from .models import *
 
 
@@ -55,18 +55,35 @@ def join_group(request):
     form_title = 'Join New Group'
     form_back = '/users/profile/'
     form_action = '/users/join_group/'
-    return render(request, 'users/general_form.html',
-                  {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
+    return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
+
+
+def leave_group(request):
+    if request.method == 'POST':
+        form = LeaveGroupForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            update_session_auth_hash(request, user)
+            return redirect('users:profile')
+    else:
+        form = LeaveGroupForm(user=request.user, data=request.POST)
+    form_title = 'Join New Group'
+    form_back = '/users/profile/'
+    form_action = '/users/leave_group/'
+    return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
 
 def create_group(request):
     if request.method == 'POST':
-        form = CreateGroupForm(request.POST)
+        form = CreateGroupForm(user=request.user, data=request.POST)
         if form.is_valid():
-            form.save(commit=False)
+            user = form.save(commit=False)
+            user.save()
+            update_session_auth_hash(request, user)
             return redirect('users:profile')
     else:
-        form = CreateGroupForm()
+        form = CreateGroupForm(user=request.user, data=request.POST)
     form_title = 'Create New Group'
     form_back = '/users/profile/'
     form_action = '/users/create_group/'

@@ -7,14 +7,13 @@ from .models import User
 from django.contrib.auth.models import Group
 
 class JoinGroupForm(forms.Form):
-    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False)
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.exclude(isPrivate=True), widget=forms.CheckboxSelectMultiple(), required=False, initial=Group.objects.all())
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
         super(JoinGroupForm, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
-        self.user.groups.clear()
         for group in self.cleaned_data['groups']:
             g = Group.objects.get(name=group.name)
             self.user.groups.add(g)
@@ -23,8 +22,30 @@ class JoinGroupForm(forms.Form):
 
         return self.user
 
+class LeaveGroupForm(forms.Form):
+    groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False, initial=Group.objects.all())
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(LeaveGroupForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        for group in self.cleaned_data['groups']:
+            g = Group.objects.get(name=group.name)
+            self.user.groups.remove(Group.objects.get(name=g))
+        if commit:
+            self.user.save()
+
+        return self.user
+
 class CreateGroupForm(forms.Form):
     name = forms.CharField(max_length=80)
+    description = forms.CharField(label='\nDescription', max_length=140, required=False, widget=forms.Textarea)
+    private = forms.BooleanField(required=False)
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super(CreateGroupForm, self).__init__(*args, **kwargs)
 
     def clean_name(self):
         try:
@@ -35,9 +56,12 @@ class CreateGroupForm(forms.Form):
         return self.cleaned_data['name']
 
     def save(self, commit=True):
-        group = Group.objects.get_or_create(name=self.cleaned_data['name'])
-
-        return group
+        Group.objects.get_or_create(name=self.cleaned_data['name'], description=self.cleaned_data['description'], isPrivate=self.cleaned_data['private'])
+        g = Group.objects.get(name=self.cleaned_data['name'])
+        self.user.groups.add(g)
+        if commit:
+            self.user.save()
+        return self.user
 
 class RegisterUserForm(forms.Form):
     email = forms.EmailField(required=True)

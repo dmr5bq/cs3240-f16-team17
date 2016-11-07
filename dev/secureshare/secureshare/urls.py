@@ -18,5 +18,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     url(r'^', include('home.urls', namespace='home')),
     url(r'^users/', include('users.urls', namespace='users')),
-    url(r'^upload/', include('upload.urls', namespace='upload')),
+    url(r'^reports/', include('reports.urls', namespace='reports')),
 ]

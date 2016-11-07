@@ -27,24 +27,24 @@ def index(request):
 
             form.save()
 
-            return HttpResponseRedirect('upload/success') # this will redirect somewhere in the user profile
+            return HttpResponseRedirect('reports/success') # this will redirect somewhere in the user profile
 
         else:
 
             return HttpResponse("Something went wrong with saving your file, please contact the administrator."
-                                + " <a href=\"/upload/\">GO BACK</a>")
+                                + " <a href=\"/reports/\">GO BACK</a>")
 
     # This means that the method == GET and it's before the file has been uploaded, shows form
     else:
 
         form = UploadFileForm()
 
-        return render(request, 'upload/index.html', {'form': form})
+        return render(request, 'reports/index.html', {'form': form})
 
 
 def success(request):
 
-    template = loader.get_template('upload/success.html')
+    template = loader.get_template('reports/success.html')
     return render(template.render(request))
 
 def register_report(request):
@@ -57,9 +57,9 @@ def register_report(request):
 
             form.save()
 
-            return HttpResponseRedirect('upload/success')
+            return HttpResponseRedirect('reports/success')
     else:
 
         form = ReportForm()
 
-        return render(request, 'upload/report.html', {'form': form})
+        return render(request, 'reports/report.html', {'form': form})

@@ -11,22 +11,31 @@
                             {{ group.name }}
                         </h2>
                     </li>
-                    {% if viewed_user.is_site_manager %}
-                    <li class="list-group-item list-group-item-success"><small>SITE MANAGER</small></li>
-                    {% endif %}
-
-                    {% if viewed_user.is_suspended %}
-                    <li class="list-group-item list-group-item-danger"><small>SUSPENDED</small></li>
-                    {% endif %}
                 </div>
                 <br>
+                <div class="list-group">
+                    <li class="list-group-item">
+                        {% if group.isPrivate %}
+                        This group is private.
+                        {% else %}
+                        This group is not private
+                        {% endif %}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Description: </strong>{{group.description}}
+                    </li>
+                </div>
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">Members in this group:</li>
                     {% if viewed_users %}
                         {% for viewed_user in viewed_users %}
                             {% if user.is_site_manager %}
-                                <a href="{% url 'users:user' user_id=viewed_user.id %}" class="list-group-item list-group-item-action">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
-                                <a href="{% url 'users:remove_user_from_group' user_id=viewed_user.id group_id=group.id%}" role="button" class="btn btn-danger btn-lg">&times</a>
+                                <li class="list-group-item">
+                                    <a href="{% url 'users:user' user_id=viewed_user.id %}" class="">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
+                                    <a href="{% url 'users:remove_user_from_group' user_id=viewed_user.id group_id=group.id%}" class="pull-right">
+                                        <span class="glyphicon glyphicon-remove" style="color:#c71500;"></span>
+                                    </a>
+                                </li>
                             {% else %}
                                 <a href="{% url 'users:user' user_id=viewed_user.id %}" class="list-group-item list-group-item-action">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
                             {% endif %}

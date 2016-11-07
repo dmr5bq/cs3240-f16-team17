@@ -14,6 +14,8 @@ urlpatterns = [
 
     url(r'^create_group/$', create_group, name='create_group'),
     url(r'^join_group/$', join_group, name='join_group'),
+    url(r'^leave_group/$', leave_group, name='leave_group'),
+    #url(r'^invite/$', invite_user, name='invite_user'),
 
     url(r'^all_users/$', all_users, name='all_users'),
     url(r'^all_groups/$', all_groups, name='all_groups'),

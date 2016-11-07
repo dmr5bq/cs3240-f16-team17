@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 from django.utils.translation import gettext as _
 
-Group.add_to_class('description', models.TextField(max_length=140, null=True))
-Group.add_to_class('isPrivate', models.BooleanField(default=False))
-
 class UserManager(BaseUserManager):
     def create_user(self, email=None, password=None):
         user = self.model(email=self.normalize_email(email))

@@ -24,6 +24,7 @@ class JoinGroupForm(forms.Form):
 
         return self.user
 
+<<<<<<< HEAD
 class AddUserToGroupForm(forms.Form):
     users = forms.ModelMultipleChoiceField(queryset=User.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False)
 
@@ -39,7 +40,7 @@ class AddUserToGroupForm(forms.Form):
             u.save()
 
         return g
-
+=======
 class LeaveGroupForm(forms.Form):
     groups = forms.ModelMultipleChoiceField(queryset=Group.objects.all(), widget=forms.CheckboxSelectMultiple(), required=False, initial=Group.objects.all())
 
@@ -55,6 +56,7 @@ class LeaveGroupForm(forms.Form):
             self.user.save()
 
         return self.user
+>>>>>>> e41d0e6865cfdae499beb21bd449b873a276b98d
 
 class CreateGroupForm(forms.Form):
     name = forms.CharField(max_length=80)

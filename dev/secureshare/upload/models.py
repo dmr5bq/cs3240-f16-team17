@@ -8,7 +8,7 @@ class FileUpload(models.Model):
     upload_id = models.AutoField(primary_key=True, default=0)
     title = models.TextField(default='title')
     file = models.FileField(default=None)
-    timestamp = models.DateTimeField(default=datetime.now())
+    timestamp = models.DateTimeField()
 
 
 class Report(models.Model):

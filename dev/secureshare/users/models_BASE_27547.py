@@ -2,9 +2,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Group
 from django.utils.translation import gettext as _
 
-Group.add_to_class('description', models.TextField(max_length=140, null=True))
-Group.add_to_class('isPrivate', models.BooleanField(default=False))
-
 class UserManager(BaseUserManager):
     def create_user(self, email=None, password=None):
         user = self.model(email=self.normalize_email(email))
@@ -48,7 +45,6 @@ class User(AbstractBaseUser):
         related_query_name="user",
     )
 
-
     # Site Manager Fields
     is_site_manager = models.BooleanField(default=False)
     is_suspended = models.BooleanField(default=False)
@@ -57,18 +53,3 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-
-
-class MessageManager(models.Manager):
-    def inbox(self, user):
-        return self.filter(
-            receiver=user
-        )
-
-
-class Message(models.Model):
-    sender = models.ForeignKey(User, related_name='sent_messages', verbose_name=_('Sender'))
-    receiver = models.ForeignKey(User, related_name='received_messages', null=True, blank=True, verbose_name=_('Receiver'))
-    msg_content = models.TextField()
-
-    objects = MessageManager()

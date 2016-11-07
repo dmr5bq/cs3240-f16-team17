@@ -8,7 +8,15 @@
                     <li class="list-group-item list-group-item-info">All Users:</li>
                     {% if users %}
                         {% for user in users %}
-                            <a href="{% url 'users:user' user_id=user.id %}" class="list-group-item list-group-item-action">{{ user.first_name }} {{ user.last_name }}</a>
+                            <a href="{% url 'users:user' user_id=user.id %}" class="list-group-item list-group-item-action">
+                                {{ user.first_name }} {{ user.last_name }}
+                                {% if user.is_site_manager %}
+                                <span class="pull-right glyphicon glyphicon-star">&nbsp;</span>
+                                {% endif %}
+                                {% if user.is_suspended %}
+                                <span class="pull-right glyphicon glyphicon-ban-circle">&nbsp;</span>
+                                {% endif %}
+                            </a>
                         {% endfor %}
                     {% else %}
                         <li class="list-group-item">There are no users.</li>

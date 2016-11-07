@@ -2,10 +2,26 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-8 col-md-8 col-lg-8 col-centered">
+        <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
                 <div class="list-group">
-                    <li class="list-group-item list-group-item-info">Members:</li>
+                    <li class="list-group-item text-center">
+                        <h2>
+                            <span class="pull-left"><small>group:</small></span>
+                            {{ group.name }}
+                        </h2>
+                    </li>
+                    {% if viewed_user.is_site_manager %}
+                    <li class="list-group-item list-group-item-success"><small>SITE MANAGER</small></li>
+                    {% endif %}
+
+                    {% if viewed_user.is_suspended %}
+                    <li class="list-group-item list-group-item-danger"><small>SUSPENDED</small></li>
+                    {% endif %}
+                </div>
+                <br>
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">Members in this group:</li>
                     {% if viewed_users %}
                         {% for viewed_user in viewed_users %}
                             {% if user.is_site_manager %}

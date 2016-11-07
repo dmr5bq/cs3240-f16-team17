@@ -56,6 +56,7 @@ class User(AbstractBaseUser):
     # Objects Manager Class
     objects = UserManager()
 
+<<<<<<< HEAD
     USERNAME_FIELD = 'email'
 
 
@@ -72,3 +73,6 @@ class Message(models.Model):
     msg_content = models.TextField()
 
     objects = MessageManager()
+=======
+    USERNAME_FIELD = 'email'
+>>>>>>> e41d0e6865cfdae499beb21bd449b873a276b98d

@@ -2,11 +2,14 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-sm-8 col-md-8 col-lg-8 col-centered">
+        <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
                 <div class="list-group">
-                    <li class="list-group-item">
-                        {{ viewed_user.first_name }} {{ viewed_user.last_name }}
+                    <li class="list-group-item text-center">
+                        <h2>
+                            <span class="pull-left"><small>user:</small></span>
+                            {{ viewed_user.first_name }} {{ viewed_user.last_name }}
+                        </h2>
                     </li>
                     {% if viewed_user.is_site_manager %}
                     <li class="list-group-item list-group-item-success"><small>SITE MANAGER</small></li>
@@ -18,7 +21,7 @@
                 </div>
                 <br>
                 <div class="list-group">
-                    <li class="list-group-item list-group-item-info">Groups:</li>
+                    <li class="list-group-item list-group-item-info">Groups this user is in:</li>
                     {% if groups %}
                         {% for group in groups %}
                             <a href="{% url 'users:group' group_id=group.id %}" class="list-group-item list-group-item-action">{{ group.name }}</a>

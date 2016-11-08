@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, loader
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from .forms import UploadFileForm, ReportForm
 from .models import Report
@@ -59,6 +60,16 @@ class AllReportListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AllReportListView, self).get_context_data(**kwargs)
+        return context
+
+
+class ReportDetailView(DetailView):
+
+    template_name = "reports/view_report.html"
+    model = Report
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportDetailView, self).get_context_data(**kwargs)
         return context
 
 

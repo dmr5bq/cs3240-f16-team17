@@ -4,51 +4,45 @@
     <div class="row">
         <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
+            {% if user.is_site_manager or not report.is_private %}
                 <div class="list-group">
                     <li class="list-group-item text-center">
                         <h2>
-                            <span class="pull-left"><small>group:</small></span>
-                            {{ group.name }}
+                            <span class="pull-left"><small>report:</small></span>
+                            {{ report.title }}
                         </h2>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Owner: </strong>{{ report.owner.email }}
                     </li>
                 </div>
                 <br>
                 <div class="list-group">
                     <li class="list-group-item">
-                        {% if group.isPrivate %}
-                        This group is private.
+                        {% if report.is_private %}
+                        This report is private.
                         {% else %}
-                        This group is not private
+                        This report is not private
                         {% endif %}
                     </li>
                     <li class="list-group-item">
-                        <strong>Description: </strong>{{group.description}}
+                        <strong>Short Description: </strong>{{ report.short_description }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Detailed Description: </strong>{{ report.detailed_description }}
                     </li>
                 </div>
                 <div class="list-group">
-                    <li class="list-group-item list-group-item-info">Members in this group:</li>
-                    {% if viewed_users %}
-                        {% for viewed_user in viewed_users %}
-                            {% if user.is_site_manager %}
-                                <li class="list-group-item">
-                                    <a href="{% url 'users:user' user_id=viewed_user.id %}" class="">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
-                                    <a href="{% url 'users:remove_user_from_group' user_id=viewed_user.id group_id=group.id%}" class="pull-right">
-                                        <span class="glyphicon glyphicon-remove" style="color:#c71500;"></span>
-                                    </a>
-                                </li>
-                            {% else %}
-                                <a href="{% url 'users:user' user_id=viewed_user.id %}" class="list-group-item list-group-item-action">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
-                            {% endif %}
-                        {% endfor %}
-                    {% else %}
-                        <li class="list-group-item">There are no users in this group.</li>
-                    {% endif %}
+                    <li class="list-group-item list-group-item-info">Report content:</li>
                 </div>
-                {% if user.is_site_manager %}
-                    <a href="{% url 'users:add_user_to_group' group_id=group.id %}" class="list-group-item list-group-item-action">Add a user to this group</a>
+                {% if user.is_site_manager or user is report.owner %}
+                    <a href="#" class="list-group-item list-group-item-action">Delete this report - x</a>
                 {% endif %}
             {% else %}
             <p>You do not have permission to view this page.</p>
+            {% endif %}
+            {% else %}
+            <p>You must login to view this page.</p>
             {% endif %}
         </div>
     </div>

@@ -7,12 +7,13 @@
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">All Reports:</li>
                     {% if object_list %}
-                        {% for report in object_lsit %}
-                            <a href="#" class="list-group-item list-group-item-action">
+                        {% for report in object_list %}
+                            <a href="{% url 'reports:view_report' pk=report.report_id %}" class="list-group-item list-group-item-action">
                                 {{ report.title }}
-                                <small>
-
-                                </small>
+                                &nbsp;
+                                <small><small>
+                                    made on {{ report.timestamp }} by {{ report.owner.email }}
+                                </small></small>
                             </a>
                         {% endfor %}
                     {% else %}

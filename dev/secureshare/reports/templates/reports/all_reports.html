@@ -14,6 +14,9 @@
                                 <small><small>
                                     made on {{ report.timestamp }} by {{ report.owner.email }}
                                 </small></small>
+                                {% if report.is_private %}
+                                <span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>
+                                {% endif %}
                             </a>
                         {% endfor %}
                     {% else %}

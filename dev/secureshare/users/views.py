@@ -157,6 +157,15 @@ def remove_user_from_group(request, user_id, group_id):
     return redirect('users:user', user_id=user.id)
 
 
+def my_groups(request):
+    template_name = 'users/my_groups.html'
+
+    context = {}
+    context['groups'] = request.user.groups.all()
+
+    return render(request, template_name, context)
+
+
 def all_groups(request):
     template_name = 'users/all_groups.html'
 

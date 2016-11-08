@@ -49,7 +49,7 @@
 
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'reports:my_reports' %}">My Reports</a></li>
-                    <li><a href="#">My Groups - x</a></li>
+                    <li><a href="{% url 'users:my_groups' %}">My Groups</a></li>
 
 
                     {% if user.is_site_manager %}

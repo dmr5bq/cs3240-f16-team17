@@ -17,8 +17,10 @@ urlpatterns = [
     url(r'^leave_group/$', leave_group, name='leave_group'),
     #url(r'^invite/$', invite_user, name='invite_user'),
 
+
     url(r'^all_users/$', all_users, name='all_users'),
     url(r'^all_groups/$', all_groups, name='all_groups'),
+    url(r'^my_groups/$', my_groups, name='my_groups'),
 
     url(r'^user/(?P<user_id>[0-9]+)/$', view_user, name='user'),
     url(r'^group/(?P<group_id>[0-9]+)/$', view_group, name='group'),

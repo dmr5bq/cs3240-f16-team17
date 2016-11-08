@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, loader
+from django.shortcuts import render, loader, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
@@ -71,6 +71,13 @@ class ReportDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ReportDetailView, self).get_context_data(**kwargs)
         return context
+
+
+def delete_report(request, report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    if request.user.is_site_manager or request.user is report.owner:
+        report.delete()
+    return redirect('home:home')
 
 
 

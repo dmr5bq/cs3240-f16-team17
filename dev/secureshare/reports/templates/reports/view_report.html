@@ -1,0 +1,55 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-8 col-centered">
+            {% if user.is_authenticated %}
+                <div class="list-group">
+                    <li class="list-group-item text-center">
+                        <h2>
+                            <span class="pull-left"><small>group:</small></span>
+                            {{ group.name }}
+                        </h2>
+                    </li>
+                </div>
+                <br>
+                <div class="list-group">
+                    <li class="list-group-item">
+                        {% if group.isPrivate %}
+                        This group is private.
+                        {% else %}
+                        This group is not private
+                        {% endif %}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Description: </strong>{{group.description}}
+                    </li>
+                </div>
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">Members in this group:</li>
+                    {% if viewed_users %}
+                        {% for viewed_user in viewed_users %}
+                            {% if user.is_site_manager %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'users:user' user_id=viewed_user.id %}" class="">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
+                                    <a href="{% url 'users:remove_user_from_group' user_id=viewed_user.id group_id=group.id%}" class="pull-right">
+                                        <span class="glyphicon glyphicon-remove" style="color:#c71500;"></span>
+                                    </a>
+                                </li>
+                            {% else %}
+                                <a href="{% url 'users:user' user_id=viewed_user.id %}" class="list-group-item list-group-item-action">{{ viewed_user.first_name }} {{ viewed_user.last_name }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">There are no users in this group.</li>
+                    {% endif %}
+                </div>
+                {% if user.is_site_manager %}
+                    <a href="{% url 'users:add_user_to_group' group_id=group.id %}" class="list-group-item list-group-item-action">Add a user to this group</a>
+                {% endif %}
+            {% else %}
+            <p>You do not have permission to view this page.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

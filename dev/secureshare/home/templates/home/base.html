@@ -48,13 +48,14 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {% if user.is_authenticated %}
-                    <li><a href="#">Reports - x</a></li>
+                    <li><a href="#">My Reports - x</a></li>
                     <li><a href="#">My Groups - x</a></li>
 
 
                     {% if user.is_site_manager %}
-                    <li><a href="{% url 'users:all_users'%}">Users</a></li>
-                    <li><a href="{% url 'users:all_groups'%}">Groups</a></li>
+                    <li><a href="{% url 'users:all_users' %}">Users</a></li>
+                    <li><a href="{% url 'users:all_groups' %}">Groups</a></li>
+                    <li><a href="{% url 'reports:all_reports' %}">Reports</a></li>
                     {% endif %}
 
                     <li><a href={% url 'users:profile' %}>Profile</a></li>

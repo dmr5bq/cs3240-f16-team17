@@ -63,6 +63,19 @@ class AllReportListView(ListView):
         return context
 
 
+class MyReportListView(ListView):
+
+    template_name = "reports/my_reports.html"
+    model = Report
+
+    def get_query_set(self):
+        return Report.objects.filter(owner=request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super(MyReportListView, self).get_context_data(**kwargs)
+        return context
+
+
 class ReportDetailView(DetailView):
 
     template_name = "reports/view_report.html"

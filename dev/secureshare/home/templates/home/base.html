@@ -48,7 +48,7 @@
             <ul class="nav navbar-nav navbar-right">
 
                 {% if user.is_authenticated %}
-                    <li><a href="#">My Reports - x</a></li>
+                    <li><a href="{% url 'reports:my_reports' %}">My Reports</a></li>
                     <li><a href="#">My Groups - x</a></li>
 
 

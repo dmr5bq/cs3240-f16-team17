@@ -1,0 +1,33 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-8 col-centered">
+            {% if user.is_authenticated %}
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">
+                        Your Reports:
+                        <a href="{% url 'reports:register_report' %}" class="pull-right">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                    </li>
+                    {% if object_list %}
+                        {% for report in object_list %}
+                            <a href="{% url 'reports:view_report' pk=report.report_id %}" class="list-group-item list-group-item-action">
+                                {{ report.title }}
+                                &nbsp;
+                                <small><small>
+                                    made on {{ report.timestamp }}
+                                </small></small>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">You have no reports.</li>
+                    {% endif %}
+                </div>
+            {% else %}
+            <p>You must login to view this page.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

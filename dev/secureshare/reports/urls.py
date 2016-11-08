@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^report/(?P<report_id>[0-9]+)/delete/$', views.delete_report, name='delete_report'),
 
     url(r'^all_reports/$', views.AllReportListView.as_view(), name='all_reports'),
+    url(r'^my_reports/$', views.MyReportListView.as_view(), name='my_reports'),
 ]
 

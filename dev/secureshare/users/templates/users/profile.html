@@ -9,22 +9,6 @@
     <p>Create new Group <a href="{% url 'users:create_group' %}">here</a></p>
     <p>Join existing Group <a href="{% url 'users:join_group' %}">here</a></p>
     <p>Leave a Group <a href="{% url 'users:leave_group' %}">here</a></p>
-    <p>You are part of these Groups:</p>
-    <ul>
-    {% if user.groups.all|length > 0 %}
-        {% for group in user.groups.all %}
-            {% if group.name|length != 0 %}
-                <li>
-                    <strong>{{ group.name }}</strong>
-                </li>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <li>
-            <strong>You currently are not in a group</strong>
-        </li>
-    {% endif %}
-    </ul>
 
 {% else %}
     <p>You are not logged in, so you can't see your profile</p>

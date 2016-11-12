@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
 
 
-from .forms import RegisterUserForm, ChangePasswordForm, CreateGroupForm, JoinGroupForm, LeaveGroupForm, AddUserToGroupForm
+from .forms import *
 from .models import *
 
 
@@ -23,8 +23,7 @@ def register(request):
 
 def profile(request):
     template_name = 'users/profile.html'
-    group_set = 'request.user.groups.all()'
-    return render(request, template_name, {'groups': group_set})
+    return render(request, template_name, {})
 
 
 def change_password(request):
@@ -75,6 +74,15 @@ def leave_group(request):
     return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
 
+def leave_group_by_id(request, group_id, user_id):
+    user = get_object_or_404(User, pk=user_id)
+    group = get_object_or_404(Group, pk=group_id)
+    if user == request.user or request.user.is_site_manager:
+        if group in user.groups.all():
+            user.groups.remove(group)
+    return redirect('users:group', group_id=group_id)
+
+
 def add_user_to_group(request, group_id):
     if request.method == 'POST':
         form = AddUserToGroupForm(data=request.POST)
@@ -118,6 +126,7 @@ def view_group(request, group_id):
             users.append(user)
     context['viewed_users'] = users
     context['user'] = request.user
+    context['user_in_group'] = group in request.user.groups.all()
 
     return render(request, template_name, context)
 
@@ -154,7 +163,12 @@ def remove_user_from_group(request, user_id, group_id):
     if request.user.is_site_manager:
         g = Group.objects.get(id=group_id)
         user.groups.remove(g)
-    return redirect('users:user', user_id=user.id)
+    if '/user/' in request.META['HTTP_REFERER']:
+        return redirect('users:user', user_id=user_id)
+    elif '/group/' in request.META['HTTP_REFERER']:
+        return redirect('users:group', group_id=group_id)
+    else:
+        return redirect('home:home')
 
 
 def my_groups(request):

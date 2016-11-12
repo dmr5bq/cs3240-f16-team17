@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^user/(?P<user_id>[0-9]+)/$', view_user, name='user'),
     url(r'^group/(?P<group_id>[0-9]+)/$', view_group, name='group'),
 
+    url(r'^group/(?P<group_id>[0-9]+)/leave/(?P<user_id>[0-9]+)/$', leave_group_by_id, name='leave_group_by_id'),
+
     url(r'^user/(?P<user_id>[0-9]+)/suspend/$', suspend_user, name='suspend_user'),
     url(r'^user/(?P<user_id>[0-9]+)/promote/$', promote_user, name='promote_user'),
     url(r'^user/(?P<user_id>[0-9]+)/(?P<group_id>[0-9]+)/remove_from_group/$', remove_user_from_group, name='remove_user_from_group'),

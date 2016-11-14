@@ -50,7 +50,7 @@ def register_report(request):
             return HttpResponseRedirect('reports/success')
     else:
         form = ReportForm()
-        return render(request, 'reports/report.html', {'form': form})
+    return render(request, 'reports/report.html', {'form': form})
 
 
 class AllReportListView(ListView):

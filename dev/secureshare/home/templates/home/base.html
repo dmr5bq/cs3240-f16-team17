@@ -46,11 +46,13 @@
                 <li><a href={% url 'home:home' %}><span class="glyphicon glyphicon-home"></span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-
+                {% load i18n static %}{% load postman_tags %}
+                {% postman_unread as unread_count %}
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'reports:my_reports' %}">My Reports</a></li>
                     <li><a href="{% url 'users:my_groups' %}">My Groups</a></li>
-
+                    <li><a href="{% url 'postman:inbox' %}">Inbox{% if unread_count %} <strong>({{ unread_count }})</strong>{% endif %}</a></li>
+                    <li><a href="{% url 'postman:write' %}">Compose</a></li>
 
                     {% if user.is_site_manager %}
                     <li><a href="{% url 'users:all_users' %}">Users</a></li>

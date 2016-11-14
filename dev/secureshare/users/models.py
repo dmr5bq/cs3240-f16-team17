@@ -4,7 +4,17 @@ from django.utils.translation import gettext as _
 
 Group.add_to_class('description', models.TextField(max_length=140, null=True))
 Group.add_to_class('isPrivate', models.BooleanField(default=False))
+'''
+class InviteManager(models.Manager):
+    def create_invite(self, toUser=None, fromUser=None, groupID=None):
+        invite = self.model(toUser=self.toUser, fromUser=self.fromUser, groupID=self.groupID)
+        return invite
 
+class Invite(models.Model):
+    toUser = models.ForeignKey(User, related_name='received_invite', verbose_name=_('invitee'))
+    fromUser = models.ForeignKey(User, related_name='sent_invite', verbose_name=_('inviter'))
+    groupID = models.ForeignKey(Group, )
+'''
 class UserManager(BaseUserManager):
     def create_user(self, email=None, password=None):
         user = self.model(email=self.normalize_email(email))
@@ -58,7 +68,7 @@ class User(AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
 
-
+'''
 class MessageManager(models.Manager):
     def inbox(self, user):
         return self.filter(
@@ -72,3 +82,4 @@ class Message(models.Model):
     msg_content = models.TextField()
 
     objects = MessageManager()
+'''

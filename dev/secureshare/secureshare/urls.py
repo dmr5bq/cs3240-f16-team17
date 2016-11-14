@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^', include('home.urls', namespace='home')),
     url(r'^users/', include('users.urls', namespace='users')),
     url(r'^reports/', include('reports.urls', namespace='reports')),
+    url(r'^messages/', include('postman.urls', namespace='postman')),
 ]

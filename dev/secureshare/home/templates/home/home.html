@@ -4,8 +4,9 @@
   <div class="row">
     <div class="col-sm-8 col-md-8 col-lg-8 col-centered">
         {% if user.is_authenticated %}
+        {% load i18n static %}{% load postman_tags %}
+        {% postman_unread as unread_count %}
         <h1>Hello, {{ user.first_name }}!</h1>
-
 
         {% else %}
         <a href="{% url 'users:login' %}" role="button" class="btn btn-success btn-lg btn-block">Login</a>

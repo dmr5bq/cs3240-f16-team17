@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from .models import User, Message
+from .models import User
 from django.contrib.auth.models import Group
 
 from django.shortcuts import get_object_or_404

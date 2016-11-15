@@ -15,7 +15,9 @@
 {% block pm_write_recipient %}{% endblock %}
 {{ form.as_table }}
 </table>
-<button type="submit">{% trans "Send" %}</button>
+    <br>
+    <a role="button" class="btn btn-danger" href="{% url 'postman:inbox' %}">Cancel</a>
+    <span class="pull-right"><button type="submit" class="btn btn-s">{% trans "Send" %}</button></span>
 </form>
 </div>
 {% endblock %}

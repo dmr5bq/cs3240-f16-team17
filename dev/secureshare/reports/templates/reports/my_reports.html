@@ -11,8 +11,8 @@
                             <span class="glyphicon glyphicon-plus"></span>
                         </a>
                     </li>
-                    {% if object_list %}
-                        {% for report in object_list %}
+                    {% if reports_list %}
+                        {% for report in reports_list %}
                             <a href="{% url 'reports:view_report' pk=report.report_id %}" class="list-group-item list-group-item-action">
                                 {{ report.title }}
                                 &nbsp;

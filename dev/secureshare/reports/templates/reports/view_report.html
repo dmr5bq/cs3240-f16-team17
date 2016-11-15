@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
-            {% if user.is_site_manager or not report.is_private %}
+            {% if user.is_site_manager or user == report.owner or not report.is_private %}
                 <div class="list-group">
                     <li class="list-group-item text-center">
                         <h2>
@@ -36,9 +36,9 @@
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">Report content:</li>
                 </div>
-                {% if user.is_site_manager or user is report.owner %}
+                {% if user.is_site_manager or user == report.owner %}
                     <br>
-                    <a href="{% url 'reports:delete_report' report_id=report.report_id %}" class="list-group-item list-group-item-action">Delete this report</a>
+                    <a href="{% url 'reports:delete_report' report_id=report.report_id %}" class="btn btn-danger">Delete this report</a>
                 {% endif %}
             {% else %}
             <p>You do not have permission to view this page.</p>

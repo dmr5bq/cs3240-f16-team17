@@ -3,6 +3,16 @@
 {% block content %}
 <div class="row">
     <div class="col-xs-8 col-centered">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <strong>Well Done!</strong>
+                    User {{ message }} has been created!
+                </div>
+            {% endfor %}
+        {% endif %}
+
         {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
         {% endif %}

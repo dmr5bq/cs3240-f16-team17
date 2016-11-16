@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
 
 
 from .forms import *
@@ -12,6 +13,7 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
+            messages.success(request, user.email)
             return redirect('users:login')
     else:
         form = RegisterUserForm()

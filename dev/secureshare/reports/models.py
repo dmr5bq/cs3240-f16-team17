@@ -27,6 +27,9 @@ class Report(models.Model):
 
     file = models.FileField(default=bin(0))
 
+    # parent_folder = models.ForeignKey(Folder, related_name="reports")
+    # reports must be given a parent folder upon creation
+
 
 class Folder(models.Model):
 
@@ -37,7 +40,6 @@ class Folder(models.Model):
 class RootFolder(Folder):
 
     owner = models.OneToOneField(User, related_name="root_folder")
-    # create new on user creation and set is_root to true
 
 
 class SubFolder(Folder):

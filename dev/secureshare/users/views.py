@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from .forms import *
 from .models import *
+from reports.models import RootFolder
 
 
 def register(request):
@@ -13,6 +14,8 @@ def register(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
+            rf = RootFolder(name=user.email, owner=user, is_root=True)
+            rf.save()
             messages.success(request, user.email)
             return redirect('users:login')
     else:

@@ -5,12 +5,29 @@
         <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
                 <div class="list-group">
+                    <li class="list-group-item text-center">
+                        <h2>
+                            <span class="pull-left"><small>folder:</small></span>
+                            {{ this_folder.name }}
+                        </h2>
+                    </li>
+                </div>
+            <br>
+                <div class="list-group">
                     <li class="list-group-item list-group-item-info">
-                        Your Reports:
+                        <small><small>BACK TO:&nbsp;&nbsp;</small></small>
+                        {% if parent_is_root %}
+                        <a href="{% url 'reports:my_reports' %}" class="a-no-style">
+                            My Reports
+                        </a>
+                        {% else %}
+                        <a href="{% url 'reports:view_folder' folder_id=this_folder.parent_folder.id %}" class="a-no-style">
+                            {{ this_folder.parent_folder.name }}
+                        </a>
+                        {% endif %}
                         <a href="{% url 'reports:register_report' %}" class="pull-right">
                             <span class="glyphicon glyphicon-plus">&nbsp;</span>
                         </a>
-
                         <a href="#" class="pull-right">
                             <span class="glyphicon glyphicon-folder-open">&nbsp;&nbsp;</span>
                         </a>
@@ -20,7 +37,7 @@
                             <a href="{% url 'reports:view_folder' folder_id=folder.id %}" class="list-group-item list-group-item-action">
                                 <span class="glyphicon glyphicon-folder-open">&nbsp;</span>
                                 {{ folder.name }}
-                                <!--{% if report.is_private %}-->
+                                <!--{% if folder.is_private %}-->
                                 <!--<span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>-->
                                 <!--{% endif %}-->
                             </a>

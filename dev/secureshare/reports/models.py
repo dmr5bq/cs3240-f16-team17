@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import *
+from users.models import *
 
 
 # Create your models here.
@@ -25,3 +26,21 @@ class Report(models.Model):
     encrypted = models.BooleanField(default=False)
 
     file = models.FileField(default=bin(0))
+
+
+class Folder(models.Model):
+
+    name = models.CharField(max_length=50, default="")
+    is_root = models.BooleanField(default=False)
+
+
+class RootFolder(Folder):
+
+    owner = models.OneToOneField(User, related_name="root_folder")
+    # create new on user creation and set is_root to true
+
+
+class SubFolder(Folder):
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent_folder = models.ForeignKey(Folder, related_name="sub_folder")

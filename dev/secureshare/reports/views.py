@@ -3,8 +3,8 @@ from django.shortcuts import render, loader, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
-from .forms import UploadFileForm, ReportForm
-from .models import Report
+from .forms import *
+from .models import *
 
 """
 10/30 DMR - there is some problem with form validation, so the form is not being stored at the moment
@@ -70,7 +70,9 @@ class MyReportListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MyReportListView, self).get_context_data(**kwargs)
+        # TODO: get reports that point to this folder
         context['reports_list'] = Report.objects.filter(owner=self.request.user)
+        context['folder_list'] = SubFolder.objects.filter(parent_folder=self.request.user.root_folder)
         return context
 
 
@@ -85,12 +87,27 @@ class ReportDetailView(DetailView):
 
 
 def delete_report(request, report_id):
+
     report = get_object_or_404(Report, pk=report_id)
     if request.user.is_site_manager or request.user is report.owner:
         report.delete()
     return redirect('home:home')
 
 
+def view_folder(request, folder_id):
+
+    template_name = 'reports/view_folder.html'
+    folder = get_object_or_404(SubFolder, pk=folder_id)
+
+    context = {}
+    if folder.parent_folder.is_root:
+        context['parent_is_root'] = True
+    context['this_folder'] = folder
+    # TODO get reports that point to this folder
+    # perhaps also implement breadcrumbs in the view_folder
+    # context['reports_list'] = Report.objects.filter(parent_folder=folder)
+    context['folder_list'] = folder.sub_folder.all()
+    return render(request, template_name, context)
 
 
 

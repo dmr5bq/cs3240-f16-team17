@@ -7,15 +7,15 @@ from users.models import *
 
 class FileUpload(models.Model):
 
-    upload_id = models.AutoField(primary_key=True, default=0)
     title = models.TextField(default='title')
     file = models.FileField(default=None)
     timestamp = models.DateTimeField(auto_now_add=True)
+    report = models.ForeignKey(Report)
+    # uploads must be given reports upon creation
 
 
 class Report(models.Model):
 
-    report_id = models.AutoField(primary_key=True, default=0)
     title = models.TextField(default="None", max_length= 50)
     short_description = models.TextField(default="", max_length=200)
     detailed_description = models.TextField(default="", max_length=5000)
@@ -26,8 +26,7 @@ class Report(models.Model):
     encrypted = models.BooleanField(default=False)
 
     file = models.FileField(default=bin(0))
-
-    # parent_folder = models.ForeignKey(Folder, related_name="reports")
+    parent_folder = models.ForeignKey(Folder, related_name="reports")
     # reports must be given a parent folder upon creation
 
 

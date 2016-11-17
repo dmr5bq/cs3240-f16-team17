@@ -56,7 +56,10 @@ in the INSTALLED_APPS setting.
 </form>
 {% paginate %}
 {% else %}
-<p>{% trans "No messages." %}</p>
+    <span class="pull-left"><a href="{% url 'postman:write' %}" role="button" class="btn btn-default" >Compose</a></span>
+    <br>
+    <br>
+    <p>You have no messages.</p>
 {% endif %}
 {% endif %}
 {% block pm_footer_info %}{% endblock %}

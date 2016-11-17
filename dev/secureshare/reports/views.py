@@ -2,8 +2,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-
-
 from .forms import *
 from .models import *
 
@@ -54,7 +52,8 @@ def register_report(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES['file'], form.cleaned_data['title'])
+            for count, f in enumerate(request.FILES.getlist('file_field')):
+                handle_uploaded_file(f, form.cleaned_data['title'] + str(count))
             return HttpResponseRedirect('../success/')
     else:
         form = UploadFileForm()

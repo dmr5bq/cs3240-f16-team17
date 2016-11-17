@@ -80,8 +80,7 @@ class MyReportListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(MyReportListView, self).get_context_data(**kwargs)
-        # TODO: get reports that point to this folder
-        context['reports_list'] = Report.objects.filter(owner=self.request.user)
+        context['reports_list'] = Report.objects.filter(parent_folder=self.request.user.root_folder)
         context['folder_list'] = SubFolder.objects.filter(parent_folder=self.request.user.root_folder)
         return context
 
@@ -107,46 +106,57 @@ def delete_report(request, report_id):
 
 def view_folder(request, folder_id):
 
+    if int(request.user.root_folder.id) == int(folder_id):
+        return redirect('reports:my_reports')
+
     template_name = 'reports/view_folder.html'
-    folder = get_object_or_404(SubFolder, pk=folder_id)
+    folder = get_object_or_404(Folder, pk=folder_id)
 
     context = {}
-    if folder.parent_folder.is_root:
-        context['parent_is_root'] = True
+    if not folder.is_root:
+        folder = get_object_or_404(SubFolder, pk=folder_id)
+        context['parent_folder'] = folder.parent_folder
+        # context['came_from_reports'] = "/my_reports/" in request.META['HTTP_REFERER']
+
     context['this_folder'] = folder
     # TODO get reports that point to this folder
     # perhaps also implement breadcrumbs in the view_folder
     # folder deletion
     # folder creation by form
-    # context['reports_list'] = Report.objects.filter(parent_folder=folder)
+    context['reports_list'] = Report.objects.filter(parent_folder=folder)
     context['folder_list'] = folder.sub_folder.all()
     return render(request, template_name, context)
 
 
 def new_folder(request, folder_id):
+
     if request.POST:
         if request.user.is_authenticated:
-            if int(request.user.root_folder.id) == int(folder_id):
-                current_folder = get_object_or_404(RootFolder, pk=folder_id)
-                name = request.POST['name']
-                sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
-                sub.save()
-                return redirect('reports:my_reports')
-            current_folder = get_object_or_404(SubFolder, pk=folder_id)
-            if current_folder.owner == request.user:
-                name = request.POST['name']
-                sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
-                sub.save()
-                return redirect('reports:view_folder', folder_id=folder_id)
-    return redirect('reports:my_reports')
+            current_folder = get_object_or_404(Folder, pk=folder_id)
+            if current_folder.is_root:
+                if request.user.is_site_manager or int(request.user.root_folder.id) == int(folder_id):
+                    current_folder = get_object_or_404(RootFolder, pk=folder_id)
+                    name = request.POST['name']
+                    sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
+                    sub.save()
+            else :
+                current_folder = get_object_or_404(SubFolder, pk=folder_id)
+                if current_folder.owner == request.user:
+                    name = request.POST['name']
+                    sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
+                    sub.save()
+            return redirect(request.META['HTTP_REFERER'])
+    return redirect('home:home')
 
 
 def delete_folder(request, folder_id):
 
     folder = get_object_or_404(SubFolder, pk=folder_id)
-    if request.user.is_site_manager or request.user is folder.owner:
+    if request.user.is_site_manager or request.user == folder.owner:
+        parent_folder_id = folder.parent_folder.id
         folder.delete()
-    # add success message
+        # add success message
+        return redirect('reports:view_folder', folder_id=parent_folder_id)
     return redirect('home:home')
 
 

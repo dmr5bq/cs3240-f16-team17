@@ -4,6 +4,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from .forms import *
 from .models import *
+from django.contrib import messages
 
 """
 10/30 DMR - there is some problem with form validation, so the form is not being stored at the moment
@@ -54,13 +55,15 @@ def register_report(request):
         if form.is_valid():
             for count, f in enumerate(request.FILES.getlist('file_field')):
                 handle_uploaded_file(f, form.cleaned_data['title'] + str(count))
-            return HttpResponseRedirect('../success/')
+            messages.success(request, form.cleaned_data['title'])
+            return HttpResponseRedirect('/reports:my_reports/')
     else:
         form = UploadFileForm()
-    return render(request, 'reports/report.html', {'form': form})
-
-
-
+    form_title = 'Create New Report'
+    form_back = '/reports/my_reports/'
+    form_action = '/reports/success/'
+    return render(request, 'users/general_form.html',
+                  {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
 
 class AllReportListView(ListView):

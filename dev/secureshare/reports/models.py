@@ -4,14 +4,21 @@ from users.models import *
 
 
 # Create your models here.
+class Folder(models.Model):
 
-class FileUpload(models.Model):
+    name = models.CharField(max_length=50, default="")
+    is_root = models.BooleanField(default=False)
 
-    title = models.TextField(default='title')
-    file = models.FileField(default=None)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    report = models.ForeignKey(Report)
-    # uploads must be given reports upon creation
+
+class RootFolder(Folder):
+
+    owner = models.OneToOneField(User, related_name="root_folder")
+
+
+class SubFolder(Folder):
+
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent_folder = models.ForeignKey(Folder, related_name="sub_folder")
 
 
 class Report(models.Model):
@@ -30,18 +37,11 @@ class Report(models.Model):
     # reports must be given a parent folder upon creation
 
 
-class Folder(models.Model):
+class FileUpload(models.Model):
 
-    name = models.CharField(max_length=50, default="")
-    is_root = models.BooleanField(default=False)
+    title = models.TextField(default='title')
+    file = models.FileField(default=None)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    report = models.ForeignKey(Report)
+    # uploads must be given reports upon creation
 
-
-class RootFolder(Folder):
-
-    owner = models.OneToOneField(User, related_name="root_folder")
-
-
-class SubFolder(Folder):
-
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    parent_folder = models.ForeignKey(Folder, related_name="sub_folder")

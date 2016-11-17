@@ -126,12 +126,19 @@ def view_folder(request, folder_id):
 
 def new_folder(request, folder_id):
     if request.POST:
-        current_folder = get_object_or_404(SubFolder, pk=folder_id)
-        if request.user.is_authenticated and current_folder.owner == request.user:
-            name = request.POST['name']
-            sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
-            sub.save()
-            return redirect('reports:view_folder', folder_id=folder_id)
+        if request.user.is_authenticated:
+            if int(request.user.root_folder.id) == int(folder_id):
+                current_folder = get_object_or_404(RootFolder, pk=folder_id)
+                name = request.POST['name']
+                sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
+                sub.save()
+                return redirect('reports:my_reports')
+            current_folder = get_object_or_404(SubFolder, pk=folder_id)
+            if current_folder.owner == request.user:
+                name = request.POST['name']
+                sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
+                sub.save()
+                return redirect('reports:view_folder', folder_id=folder_id)
     return redirect('reports:my_reports')
 
 

@@ -45,7 +45,7 @@
                     {% endif %}
                     {% if reports_list %}
                         {% for report in reports_list %}
-                            <a href="{% url 'reports:view_report' pk=report.report_id %}" class="list-group-item list-group-item-action">
+                            <a href="{% url 'reports:view_report' pk=report.id %}" class="list-group-item list-group-item-action">
                                 {{ report.title }}
                                 &nbsp;
                                 <small><small>
@@ -59,6 +59,12 @@
                     {% else %}
                         <li class="list-group-item">You have no reports.</li>
                     {% endif %}
+                    new folder test
+                    <form action="{% url 'reports:new_folder' folder_id=this_folder.id %}" method="post">
+                      {% csrf_token %}
+                      <input type="text" name="name">
+                      <input type="submit" value="submit" class="btn btn-default">
+                    </form>
                 </div>
             {% else %}
             <p>You must login to view this page.</p>

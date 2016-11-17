@@ -34,6 +34,7 @@ def index(request):
         form = UploadFileForm(request.POST, request.FILES)
         # 10/30 DMR - This fails right now
         if form.is_valid():
+
             form.save()
             return HttpResponseRedirect('reports/success') # this will redirect somewhere in the user profile
         else:
@@ -101,6 +102,7 @@ def delete_report(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.user.is_site_manager or request.user is report.owner:
         report.delete()
+    # add success message
     return redirect('home:home')
 
 
@@ -115,9 +117,31 @@ def view_folder(request, folder_id):
     context['this_folder'] = folder
     # TODO get reports that point to this folder
     # perhaps also implement breadcrumbs in the view_folder
+    # folder deletion
+    # folder creation by form
     # context['reports_list'] = Report.objects.filter(parent_folder=folder)
     context['folder_list'] = folder.sub_folder.all()
     return render(request, template_name, context)
+
+
+def new_folder(request, folder_id):
+    if request.POST:
+        current_folder = get_object_or_404(SubFolder, pk=folder_id)
+        if request.user.is_authenticated and current_folder.owner == request.user:
+            name = request.POST['name']
+            sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
+            sub.save()
+            return redirect('reports:view_folder', folder_id=folder_id)
+    return redirect('reports:my_reports')
+
+
+def delete_folder(request, folder_id):
+
+    folder = get_object_or_404(SubFolder, pk=folder_id)
+    if request.user.is_site_manager or request.user is folder.owner:
+        folder.delete()
+    # add success message
+    return redirect('home:home')
 
 
 

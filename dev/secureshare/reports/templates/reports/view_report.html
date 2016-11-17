@@ -38,7 +38,7 @@
                 </div>
                 {% if user.is_site_manager or user == report.owner %}
                     <br>
-                    <a href="{% url 'reports:delete_report' report_id=report.report_id %}" class="btn btn-danger">Delete this report</a>
+                    <a href="{% url 'reports:delete_report' report_id=report.id %}" class="btn btn-danger">Delete this report</a>
                 {% endif %}
             {% else %}
             <p>You do not have permission to view this page.</p>

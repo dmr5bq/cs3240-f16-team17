@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, loader, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+
 
 from .forms import *
 from .models import *
@@ -21,6 +22,13 @@ Goals:
 """
 
 
+
+def handle_uploaded_file(f, title):
+    with open('media/' + str(title), 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
+
+
 def index(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -38,19 +46,21 @@ def index(request):
 
 
 def success(request):
-    template = loader.get_template('reports/success.html')
-    return render(template.render(request))
+    return render(request, 'reports/success.html')
 
 
 def register_report(request):
     if request.method == 'POST':
-        form = ReportForm(request.POST, request.FILES)
+        form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('reports/success')
+            handle_uploaded_file(request.FILES['file'], form.cleaned_data['title'])
+            return HttpResponseRedirect('../success/')
     else:
-        form = ReportForm()
+        form = UploadFileForm()
     return render(request, 'reports/report.html', {'form': form})
+
+
+
 
 
 class AllReportListView(ListView):

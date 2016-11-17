@@ -5,13 +5,13 @@ from .models import Report
 
 class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=50, min_length=3)
-    files = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    file = forms.FileField()
 
 
 class ReportForm(ModelForm):
     class Meta:
         model = Report
-        fields = ['title', 'encrypted', 'file']
+        fields = ['title', 'encrypted', 'file',]
 
 
 

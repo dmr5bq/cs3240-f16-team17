@@ -15,15 +15,19 @@
             <br>
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">
-                        <small><small>BACK TO:&nbsp;&nbsp;</small></small>
-                        {% if parent_is_root %}
-                        <a href="{% url 'reports:my_reports' %}" class="a-no-style">
-                            My Reports
-                        </a>
+                        {% if not this_folder.is_root %}
+                            <small><small>BACK TO:&nbsp;&nbsp;</small></small>
+                            {% if parent_folder.is_root and this_folder.owner == user %}
+                            <a href="{% url 'reports:my_reports' %}" class="a-no-style">
+                                My Reports
+                            </a>
+                            {% else %}
+                            <a href="{% url 'reports:view_folder' folder_id=parent_folder.id %}" class="a-no-style">
+                                {{ parent_folder.name }}
+                            </a>
+                            {% endif %}
                         {% else %}
-                        <a href="{% url 'reports:view_folder' folder_id=this_folder.parent_folder.id %}" class="a-no-style">
-                            {{ this_folder.parent_folder.name }}
-                        </a>
+                            This is the root.
                         {% endif %}
                         <a href="{% url 'reports:register_report' %}" class="pull-right">
                             <span class="glyphicon glyphicon-plus">&nbsp;</span>
@@ -58,6 +62,10 @@
                         {% endfor %}
                     {% else %}
                         <li class="list-group-item">You have no reports.</li>
+                    {% endif %}
+                    {% if user.is_site_manager or user == folder.owner %}
+                        <br>
+                        <a href="{% url 'reports:delete_folder' folder_id=this_folder.id %}" class="btn btn-danger">Delete this folder</a>
                     {% endif %}
                 </div>
             {% else %}

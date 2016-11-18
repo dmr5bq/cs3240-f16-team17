@@ -3,19 +3,54 @@
 {% block content %}
     <div class="row">
         <div class="col-xs-8 col-centered">
-            {% if user.is_site_manager %}
+            {% if user.is_authenticated %}
                 <div class="list-group">
-                    <li class="list-group-item list-group-item-info">All Reports:</li>
-                    {% if object_list %}
-                        {% for report in object_list %}
+                    <li class="list-group-item list-group-item-info">
+                        All Reports:
+                        &nbsp;
+                        <div class="btn-group btn-group-xs">
+                            <a href="{% url 'reports:all_reports'%}" role="button" class="btn btn-default {% if not detail %}active{% endif %}">
+                                Short
+                            </a>
+                            <a href="{% url 'reports:all_reports_detail' %}" role="button" class="btn btn-default {% if detail %}active{% endif %}">
+                                Detail
+                            </a>
+                        </div>
+                        <a href="{% url 'reports:register_report' %}" class="pull-right">
+                            <span class="glyphicon glyphicon-plus">&nbsp;</span>
+                        </a>
+                    </li>
+                    {% if reports_list %}
+                        {% for report in reports_list %}
                             <a href="{% url 'reports:view_report' pk=report.id %}" class="list-group-item list-group-item-action">
+                                <span class="glyphicon glyphicon-file">&nbsp;</span>
                                 {{ report.title }}
-                                &nbsp;
-                                <small><small>
-                                    made on {{ report.timestamp }} by {{ report.owner.email }}
-                                </small></small>
                                 {% if report.is_private %}
                                 <span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>
+                                {% endif %}
+                                {% if detail %}
+                                <small><small>
+                                    by
+                                    <u>{{ report.owner.email }}</u>
+                                    at
+                                    {{ report.timestamp|date:'m/d/Y h:ia' }}
+                                </small></small>
+                                <br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <small><small>
+                                    {% if report.short_description %}
+                                        {{ report.short_description }}
+                                    {% else %}
+                                        This report has no short description.
+                                    {% endif %}
+                                </small></small>
+                                {% else %}
+                                <small><small>
+                                    by
+                                    <u>{{ report.owner.email }}</u>
+                                    at
+                                    {{ report.timestamp|date:'m/d/Y h:ia' }}
+                                </small></small>
                                 {% endif %}
                             </a>
                         {% endfor %}
@@ -24,7 +59,7 @@
                     {% endif %}
                 </div>
             {% else %}
-            <p>You do not have permission to view this page.</p>
+            <p>You must login to view reports.</p>
             {% endif %}
         </div>
     </div>

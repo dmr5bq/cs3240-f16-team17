@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.db.models import Q
 from .forms import *
 from .models import *
 from django.contrib import messages
@@ -66,14 +67,23 @@ def register_report(request):
                   {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
 
-class AllReportListView(ListView):
+def all_reports(request, detail='short'):
 
     template_name = "reports/all_reports.html"
-    model = Report
+    print(detail)
 
-    def get_context_data(self, **kwargs):
-        context = super(AllReportListView, self).get_context_data(**kwargs)
-        return context
+    context = {}
+    if request.user.is_authenticated:
+        if request.user.is_site_manager:
+            context['reports_list'] = Report.objects.all()
+        else:
+            context['reports_list'] = Report.objects.filter(Q(owner=request.user) | Q(is_private=False))
+    else:
+        context['reports_list'] = Report.objects.filter(is_private=False)
+    context['detail'] = '/detail/' in request.path
+
+    return render(request, template_name, context)
+
 
 
 class MyReportListView(ListView):

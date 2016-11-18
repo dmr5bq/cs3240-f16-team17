@@ -15,7 +15,8 @@ urlpatterns = [
     url(r'^folder/(?P<folder_id>[0-9]+)/new/$', views.new_folder, name='new_folder'),
     url(r'^folder/(?P<folder_id>[0-9]+)/delete/$', views.delete_folder, name='delete_folder'),
 
-    url(r'^all_reports/$', views.AllReportListView.as_view(), name='all_reports'),
+    url(r'^all_reports/$', views.all_reports, name='all_reports'),
+    url(r'^all_reports/detail/$', views.all_reports, name='all_reports_detail'),
     url(r'^my_reports/$', views.MyReportListView.as_view(), name='my_reports'),
 ]
 

@@ -36,7 +36,7 @@ def index(request):
         if form.is_valid():
 
             form.save()
-            return HttpResponseRedirect('reports/success') # this will redirect somewhere in the user profile
+            return HttpResponseRedirect('reports/all_reports') # this will redirect somewhere in the user profile
         else:
             return HttpResponse("Something went wrong with saving your file, please contact the administrator."
                                 + " <a href=\"/reports/\">GO BACK</a>")
@@ -62,7 +62,7 @@ def register_report(request):
         form = UploadFileForm()
     form_title = 'Create New Report'
     form_back = '/reports/my_reports/'
-    form_action = '/reports/success/'
+    form_action = '/reports/all_reports/'
     return render(request, 'users/general_form.html',
                   {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 

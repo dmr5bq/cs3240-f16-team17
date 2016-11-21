@@ -13,10 +13,8 @@ from django.contrib import messages
 
 def handle_uploaded_file(f, report, count):
     f_upload = FileUpload(title=f.name, file=f, report=report)
+    f_upload.file.name = f_upload.id
     f_upload.save()
-    with open('media/' + str(f_upload.id), 'wb+') as destination:
-        for chunk in f.chunks():
-            destination.write(chunk)
 
 
 def index(request):
@@ -77,7 +75,6 @@ def register_report(request, folder_id):
 def all_reports(request, detail='short'):
 
     template_name = "reports/all_reports.html"
-    print(detail)
 
     context = {}
     if request.user.is_authenticated:

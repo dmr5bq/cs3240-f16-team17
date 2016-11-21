@@ -23,7 +23,7 @@ Goals:
 
 
 def handle_uploaded_file(f, report, count):
-    f_upload = FileUpload(title=str(count), file=f, report=report)
+    f_upload = FileUpload(title=f.name, file=f, report=report)
     f_upload.save()
     with open('media/' + str(f_upload.id), 'wb+') as destination:
         for chunk in f.chunks():
@@ -66,14 +66,14 @@ def register_report(request):
 
 '''
 
-def register_report(request):
+def register_report(request, folder_id):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             report = Report(title=form.cleaned_data['title'], short_description=form.cleaned_data['short_description'],
                             detailed_description=form.cleaned_data['detailed_description'],
                             is_private=form.cleaned_data['is_private'], encrypted=form.cleaned_data['encrypted'],
-                            owner=request.user, parent_folder=request.user.root_folder)
+                            owner=request.user, parent_folder=get_object_or_404(Folder, pk=folder_id))
             report.save()
             for count, f in enumerate(request.FILES.getlist('file_field')):
                 handle_uploaded_file(f, report, count)

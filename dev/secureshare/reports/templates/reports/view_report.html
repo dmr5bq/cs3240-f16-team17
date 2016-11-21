@@ -35,6 +35,11 @@
                 <br>
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">Report content:</li>
+                    {% if file_list %}
+                        {% for file in file_list %}
+                            {{ file.title }}
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 {% if user.is_site_manager or user == report.owner %}
                     <br>

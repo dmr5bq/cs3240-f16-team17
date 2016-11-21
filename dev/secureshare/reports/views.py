@@ -22,8 +22,10 @@ Goals:
 """
 
 
-def handle_uploaded_file(f, title):
-    with open('media/' + str(title), 'wb+') as destination:
+def handle_uploaded_file(f, report, count):
+    f_upload = FileUpload(title=str(count), file=f, report=report)
+    f_upload.save()
+    with open('media/' + str(f_upload.id), 'wb+') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -45,7 +47,7 @@ def index(request):
         return render(request, 'reports/index.html', {'form': form})
 
 
-
+'''
 def register_report(request):
     if request.method == 'POST':
         form = ReportForm(request.POST, request.FILES)
@@ -61,6 +63,26 @@ def register_report(request):
     form_action = '/reports/all_reports/'
     return render(request, 'users/general_form.html',
                   {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
+
+'''
+
+def register_report(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            report = Report(title=form.cleaned_data['title'], short_description=form.cleaned_data['short_description'],
+                            detailed_description=form.cleaned_data['detailed_description'],
+                            is_private=form.cleaned_data['is_private'], encrypted=form.cleaned_data['encrypted'],
+                            owner=request.user, parent_folder=request.user.root_folder)
+            report.save()
+            for count, f in enumerate(request.FILES.getlist('file_field')):
+                handle_uploaded_file(f, report, count)
+            messages.success(request, form.cleaned_data['title'])
+            return HttpResponseRedirect('/reports/my_reports/')
+    else:
+        form = UploadFileForm()
+    return render(request, 'reports/report.html', {'form': form})
+
 
 
 def all_reports(request, detail='short'):
@@ -101,13 +123,14 @@ class ReportDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ReportDetailView, self).get_context_data(**kwargs)
+        context['file_list'] = FileUpload.objects.filter(pk=get_object_or_404(Report, pk=self.kwargs['pk']).id)
         return context
 
 
 def delete_report(request, report_id):
 
     report = get_object_or_404(Report, pk=report_id)
-    if request.user.is_site_manager or request.user is report.owner:
+    if request.user.is_site_manager or request.user == report.owner:
         report.delete()
     # add success message
     return redirect('home:home')

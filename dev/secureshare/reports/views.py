@@ -45,9 +45,6 @@ def index(request):
         return render(request, 'reports/index.html', {'form': form})
 
 
-def success(request):
-    return render(request, 'reports/success.html')
-
 
 def register_report(request):
     if request.method == 'POST':

@@ -8,17 +8,6 @@ from .models import *
 from django.contrib import messages
 
 """
-10/30 DMR - there is some problem with form validation, so the form is not being stored at the moment
-
-Goals:
-    -> handle multiple files
-    -> display progress bars
-    -> handle file storage (filesystem?)
-    -> successful redirect <--- probably has to do with form validation
-    -> handle file encryption mechanism
-    -> add encryption option to the form (button or checkbox?)
-    -> include user information from the session for storage, determining ownership
-
 """
 
 

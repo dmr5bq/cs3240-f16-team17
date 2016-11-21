@@ -32,7 +32,6 @@ class Report(models.Model):
     is_private = models.BooleanField(default=False)
     encrypted = models.BooleanField(default=False)
 
-    file = models.FileField(default=bin(0))
     parent_folder = models.ForeignKey(Folder, related_name="reports")
     # reports must be given a parent folder upon creation
 

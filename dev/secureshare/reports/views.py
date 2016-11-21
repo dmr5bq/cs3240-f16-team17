@@ -22,7 +22,6 @@ Goals:
 """
 
 
-
 def handle_uploaded_file(f, title):
     with open('media/' + str(title), 'wb+') as destination:
         for chunk in f.chunks():
@@ -52,14 +51,14 @@ def success(request):
 
 def register_report(request):
     if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
+        form = ReportForm(request.POST, request.FILES)
         if form.is_valid():
             for count, f in enumerate(request.FILES.getlist('file_field')):
                 handle_uploaded_file(f, form.cleaned_data['title'] + str(count))
             messages.success(request, form.cleaned_data['title'])
             return HttpResponseRedirect('/reports:my_reports/')
     else:
-        form = UploadFileForm()
+        form = ReportForm()
     form_title = 'Create New Report'
     form_back = '/reports/my_reports/'
     form_action = '/reports/all_reports/'

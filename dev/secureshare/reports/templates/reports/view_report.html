@@ -37,7 +37,12 @@
                     <li class="list-group-item list-group-item-info">Report content:</li>
                     {% if file_list %}
                         {% for file in file_list %}
+                            <li class="list-group-item">
                             {{ file.title }}
+                                <span class="pull-right">
+                                    <small>{{file.timestamp}}</small>
+                                </span>
+                            </li>
                         {% endfor %}
                     {% endif %}
                 </div>

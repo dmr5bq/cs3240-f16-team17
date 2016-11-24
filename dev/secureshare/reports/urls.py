@@ -9,6 +9,7 @@ urlpatterns = [
 
     url(r'^report/(?P<pk>[0-9]+)/$', views.ReportDetailView.as_view(), name='view_report'),
     url(r'^report/(?P<report_id>[0-9]+)/delete/$', views.delete_report, name='delete_report'),
+    url(r'^report/(?P<report_id>[0-9]+)/download/$', views.download_report, name='download_report'),
 
     url(r'^folder/(?P<folder_id>[0-9]+)/$', views.view_folder, name='view_folder'),
     url(r'^folder/(?P<folder_id>[0-9]+)/new/$', views.new_folder, name='new_folder'),

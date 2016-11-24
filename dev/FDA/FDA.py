@@ -32,11 +32,11 @@ def download():
 
 	### Get Reports ###
 	URL2 = 'http://localhost:8000/reports/my_reports/'
-	client.get(URL)  # sets cookie
+	client.get(URL2)  # sets cookie
 	soup2 = BeautifulSoup(client.get(URL2).text, "html.parser")
 	csrf2 = soup2.find('input', {'name':'csrfmiddlewaretoken'})['value']
 	login_data2 = dict(username=username, password=password, csrfmiddlewaretoken=csrf2, next='/')
-	req2 = client.post(URL2, login_data2)
+	req2 = client.get(URL2, login_data2)
 
 	### Parse Report String ###
 	try:

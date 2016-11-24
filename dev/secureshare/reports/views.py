@@ -6,6 +6,8 @@ from django.db.models import Q
 from .forms import *
 from .models import *
 from django.contrib import messages
+import os
+from django.conf import settings
 
 """
 """
@@ -13,7 +15,10 @@ from django.contrib import messages
 
 def handle_uploaded_file(f, report, count):
     f_upload = FileUpload(title=f.name, file=f, report=report)
-    f_upload.file.name = f_upload.id
+    f_upload.save()
+    new_name = str(f_upload.id)
+    os.rename(f_upload.file.path, settings.MEDIA_ROOT + '/' + new_name)
+    f_upload.file.name = new_name
     f_upload.save()
 
 
@@ -177,5 +182,16 @@ def delete_folder(request, folder_id):
         return redirect('reports:view_folder', folder_id=parent_folder_id)
     return redirect('home:home')
 
+
+def download_report(request, report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    if request.user.is_authenticated and not report.is_private or report.owner == request.user or request.user.is_site_manager:
+        uploads = FileUpload.objects.filter(report=report)
+        for i in uploads:
+            print(i.title)
+            print(i.file.path)
+    # check permissions
+    # create zip of report files
+    return redirect('reports:view_report', pk=report_id,)
 
 

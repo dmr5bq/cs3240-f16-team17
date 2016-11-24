@@ -41,6 +41,6 @@ class FileUpload(models.Model):
     title = models.TextField(default='title')
     file = models.FileField(default=None)
     timestamp = models.DateTimeField(auto_now_add=True)
-    report = models.ForeignKey(Report)
+    report = models.ForeignKey(Report, related_name='files')
     # uploads must be given reports upon creation
 

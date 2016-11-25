@@ -4,6 +4,15 @@
     <div class="row">
         <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-info">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <strong>Success!</strong>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <div class="list-group">
                     <li class="list-group-item text-center">
                         <h2>

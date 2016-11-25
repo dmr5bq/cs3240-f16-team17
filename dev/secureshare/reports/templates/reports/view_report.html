@@ -85,6 +85,15 @@
         <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
             {% if user.is_site_manager or user == report.owner or not report.is_private %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-info">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <strong>Success!</strong>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 <div class="list-group">
                     <li class="list-group-item text-center">
                         <h2>
@@ -185,12 +194,9 @@
             <form action="{% url 'reports:upload_file_to_report' report_id=report.id %}" method="post" enctype="multipart/form-data">
             <div class="modal-body">
                 {% csrf_token %}
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">{{ this_folder.name }} / </span>
-                    <input type="text" class="form-control" placeholder="Folder name" aria-describedby="basic-addon1" name="name">
-                </div>
-                <label for="id_encrypted">Encrypted:</label> <input id="id_encrypted" name="encrypted" type="checkbox" />
-                <label for="id_file_field">File field:</label><input id="id_file_field" name="file_field" type="file" multiple />
+                <label for="id_file_field">Upload files</label><input id="id_file_field" name="file_field" type="file" multiple />
+                <br>
+                <label for="id_encrypted">Encrypted?</label> <input id="id_encrypted" name="encrypted" type="checkbox" />
             </div>
             <div class="modal-footer" style="border-top: none;">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

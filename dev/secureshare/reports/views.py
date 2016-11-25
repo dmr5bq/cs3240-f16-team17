@@ -36,7 +36,7 @@ def register_report(request, folder_id):
                             is_private=form.cleaned_data['is_private'],
                             owner=request.user, parent_folder=get_object_or_404(Folder, pk=folder_id))
             report.save()
-            messages.success(request, form.cleaned_data['title'])
+            messages.success(request, "Report \""+form.cleaned_data['title']+"\" has been created.")
     return redirect('reports:view_folder', folder_id=folder_id)
 
 
@@ -47,10 +47,10 @@ def upload_file_to_report(request, report_id):
             form = UploadFileForm(request.POST, request.FILES)
             if form.is_valid():
                 enc = form.cleaned_data['encrypted']
-                print(str(request.FILES.getlist('file_field')))
-                print(str(form.cleaned_data['file_field']))
                 for count, f in enumerate(request.FILES.getlist('file_field')):
                     handle_uploaded_file(f, report, count, enc)
+                for file in request.FILES.getlist('file_field'):
+                    messages.success(request, "File \""+file.name+"\" has been uploaded.")
     return redirect('reports:view_report', pk=report_id)
 
 
@@ -108,6 +108,7 @@ def edit_report(request, report_id):
             else:
                 report.is_private = False
             report.save()
+            messages.success(request, "Changes to \""+report.title+"\" have been saved.")
     return redirect(request.META['HTTP_REFERER'])
 
 
@@ -116,9 +117,10 @@ def delete_report(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.user.is_site_manager or request.user == report.owner:
         parent_folder_id = report.parent_folder.id
+        title = report.title
         report.delete()
+        messages.success(request, "Report \"" + title + "\" has been deleted.")
         return redirect('reports:view_folder', folder_id=parent_folder_id)
-    # add success message
     return redirect('home:home')
 
 
@@ -134,13 +136,7 @@ def view_folder(request, folder_id):
     if not folder.is_root:
         folder = get_object_or_404(SubFolder, pk=folder_id)
         context['parent_folder'] = folder.parent_folder
-        # context['came_from_reports'] = "/my_reports/" in request.META['HTTP_REFERER']
-
     context['this_folder'] = folder
-    # TODO get reports that point to this folder
-    # perhaps also implement breadcrumbs in the view_folder
-    # folder deletion
-    # folder creation by form
     context['reports_list'] = Report.objects.filter(parent_folder=folder)
     context['folder_list'] = folder.sub_folder.all()
     return render(request, template_name, context)
@@ -163,6 +159,7 @@ def new_folder(request, folder_id):
                     name = request.POST['name']
                     sub = SubFolder(name=name, owner=request.user, parent_folder=current_folder)
                     sub.save()
+            messages.success(request, "Folder \"" + request.POST['name'] + "\" has been created.")
             return redirect(request.META['HTTP_REFERER'])
     return redirect('home:home')
 
@@ -172,8 +169,10 @@ def delete_folder(request, folder_id):
     folder = get_object_or_404(SubFolder, pk=folder_id)
     if request.user.is_site_manager or request.user == folder.owner:
         parent_folder_id = folder.parent_folder.id
+        name = folder.name
         folder.delete()
         # add success message
+        messages.success(request, "Folder \"" + name + "\" has been deleted.")
         return redirect('reports:view_folder', folder_id=parent_folder_id)
     return redirect('home:home')
 
@@ -191,7 +190,9 @@ def download_file(request, file_id):
 def delete_file(request, file_id):
     upload = get_object_or_404(FileUpload, pk=file_id)
     if request.user.is_authenticated and upload.report.owner == request.user or request.user.is_site_manager:
+        title = upload.title
         upload.delete()
+        messages.success(request, "File \"" + title + "\" has been deleted.")
     return redirect(request.META['HTTP_REFERER'])
 
 

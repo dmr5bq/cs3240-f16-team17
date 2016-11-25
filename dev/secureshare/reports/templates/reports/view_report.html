@@ -8,6 +8,7 @@
             var title = document.getElementById('title').value;
             var sDesc = document.getElementById('sDesc').value;
             var dDesc = document.getElementById('dDesc').value;
+            var privacy = document.getElementById('privacy').value;
 
             var action = document.getElementById('editingURL').value;
             var token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
@@ -36,6 +37,12 @@
 
             var hiddenField = document.createElement("input");
             hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'privacy');
+            hiddenField.setAttribute("value", privacy);
+            form.appendChild(hiddenField);
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", 'csrfmiddlewaretoken');
             hiddenField.setAttribute("value", token);
             form.appendChild(hiddenField);
@@ -46,8 +53,13 @@
             document.getElementById('editing').value = "t";
             document.getElementById('editButton').innerHTML = "Save Changes";
             document.getElementById('title').disabled="";
+            document.getElementById('title').removeAttribute("class");
             document.getElementById('sDesc').disabled="";
+            document.getElementById('sDesc').removeAttribute("class");
             document.getElementById('dDesc').disabled="";
+            document.getElementById('dDesc').removeAttribute("class");
+            document.getElementById('privacy').removeAttribute("disabled");
+            document.getElementById('privacy').removeAttribute("class");
         }
     }
 
@@ -58,6 +70,16 @@
         background: transparent;
         color: #000;
     }
+    .select-no-style {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        border: none;
+        /* needed for Firefox: */
+        overflow:hidden;
+        color: #000;
+        background-color: inherit;
+    }
 </style>
     <div class="row">
         <div class="col-xs-8 col-centered">
@@ -67,7 +89,7 @@
                     <li class="list-group-item text-center">
                         <h2>
                             <span class="pull-left"><small>report:</small></span>
-                            <input type="text" id="title" class="input-no-style" value="{{ report.title }}" disabled="disabled"/>
+                            <input type="text" id="title" class="input-no-style" value="{{ report.title }}" disabled="disabled" maxlength="50"/>
                         </h2>
                     </li>
                     <li class="list-group-item">
@@ -77,19 +99,24 @@
                 <br>
                 <div class="list-group">
                     <li class="list-group-item">
-                        {% if report.is_private %}
-                        This report is private.
-                        {% else %}
-                        This report is not private
-                        {% endif %}
+                        This report is
+                        <select id="privacy" class="select-no-style" disabled="disabled">
+                            {% if report.is_private %}
+                            <option value="np">not private</option>
+                            <option value="p" selected>private</option>
+                            {% else %}
+                            <option value="np" selected>not private</option>
+                            <option value="p">private</option>
+                            {% endif %}
+                        </select>
                     </li>
                     <li class="list-group-item">
                         <strong>Short Description: </strong>
-                        <input type="text" id="sDesc" class="input-no-style" value="{{ report.short_description }}" disabled="disabled"/>
+                        <input type="text" id="sDesc" class="input-no-style" value="{{ report.short_description }}" disabled="disabled" maxlength="200"/>
                     </li>
                     <li class="list-group-item">
                         <strong>Detailed Description: </strong>
-                        <input type="text" id="dDesc" class="input-no-style" value="{{ report.detailed_description }}" disabled="disabled"/>
+                        <input type="text" id="dDesc" class="input-no-style" value="{{ report.detailed_description }}" disabled="disabled" maxlength="5000"/>
                     </li>
                 </div>
                 <br>

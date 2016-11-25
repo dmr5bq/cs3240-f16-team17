@@ -130,6 +130,11 @@ def edit_report(request, report_id):
             report.title = request.POST['title']
             report.short_description = request.POST['sDesc']
             report.detailed_description = request.POST['dDesc']
+            print(request.POST['privacy'])
+            if request.POST['privacy'] == "p":
+                report.is_private = True
+            else:
+                report.is_private = False
             report.save()
     return redirect(request.META['HTTP_REFERER'])
 

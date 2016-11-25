@@ -4,7 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
     url(r'^register/(?P<folder_id>[0-9]+)/$', views.register_report, name='register_report'),
 
     url(r'^file/download/(?P<file_id>[0-9]+)/$', views.download_file, name='download_file'),

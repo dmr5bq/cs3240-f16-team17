@@ -27,23 +27,6 @@ def handle_uploaded_file(f, report, count, enc):
     f_upload.save()
 
 
-def index(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        # 10/30 DMR - This fails right now
-        if form.is_valid():
-
-            form.save()
-            return HttpResponseRedirect('reports/all_reports') # this will redirect somewhere in the user profile
-        else:
-            return HttpResponse("Something went wrong with saving your file, please contact the administrator."
-                                + " <a href=\"/reports/\">GO BACK</a>")
-    # This means that the method == GET and it's before the file has been uploaded, shows form
-    else:
-        form = UploadFileForm()
-        return render(request, 'reports/index.html', {'form': form})
-
-
 def register_report(request, folder_id):
     if request.method == 'POST':
         form = ReportForm(request.POST, request.FILES)
@@ -54,10 +37,7 @@ def register_report(request, folder_id):
                             owner=request.user, parent_folder=get_object_or_404(Folder, pk=folder_id))
             report.save()
             messages.success(request, form.cleaned_data['title'])
-            return HttpResponseRedirect('/reports/my_reports/')
-    else:
-        form = ReportForm()
-    return render(request, 'reports/report.html', {'form': form})
+    return redirect('reports:view_folder', folder_id=folder_id)
 
 
 def upload_file_to_report(request, report_id):

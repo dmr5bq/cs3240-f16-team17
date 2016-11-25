@@ -98,6 +98,12 @@
                 </div>
                 <br>
                 <div class="list-group">
+                    <li class="list-group-item list-group-item-info">
+                            <small><small>BACK TO:&nbsp;&nbsp;</small></small>
+                            <a href="{% url 'reports:view_folder' folder_id=report.parent_folder.id %}" class="a-no-style">
+                                {{ report.parent_folder.name }}
+                            </a>
+                    </li>
                     <li class="list-group-item">
                         This report is
                         <select id="privacy" class="select-no-style" disabled="disabled">
@@ -124,7 +130,7 @@
                     <li class="list-group-item list-group-item-info">
                         Report content:
                         <a href='' data-toggle="modal" data-target="#uploadFileModal" class="pull-right">
-                            <span class="glyphicon glyphicon-plus">&nbsp;</span>
+                            <span class="glyphicon glyphicon-plus"></span>
                         </a>
                     </li>
                     {% if file_list %}
@@ -139,7 +145,9 @@
                                              <span class="glyphicon glyphicon-trash">&nbsp;&nbsp;</span>
                                          </a>
                                     {% endif %}
-                                    <!--<small>{{file.timestamp}}glyphicon glyphicon-sunglasses</small>-->
+                                    {% if file.encrypted %}
+                                        <span class="pull-right glyphicon glyphicon-sunglasses">&nbsp;&nbsp;</span>
+                                    {% endif %}
                             </li>
                         {% endfor %}
                     {% endif %}

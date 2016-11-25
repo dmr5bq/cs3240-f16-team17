@@ -31,11 +31,13 @@
                                 <span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>
                                 {% endif %}
                                 {% if detail %}
+                                <br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <small><small>
                                     by
                                     <u>{{ report.owner.email }}</u>
-                                    at
-                                    {{ report.timestamp|date:'m/d/Y h:ia' }}
+                                    on
+                                    {{ report.timestamp|date:'m/d/Y' }}
                                 </small></small>
                                 <br>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -45,13 +47,6 @@
                                     {% else %}
                                         This report has no short description.
                                     {% endif %}
-                                </small></small>
-                                {% else %}
-                                <small><small>
-                                    by
-                                    <u>{{ report.owner.email }}</u>
-                                    at
-                                    {{ report.timestamp|date:'m/d/Y h:ia' }}
                                 </small></small>
                                 {% endif %}
                             </a>

@@ -4,19 +4,15 @@ from .models import Report
 
 
 class UploadFileForm(forms.Form):
-    title = forms.CharField(max_length=50, min_length=3)
-    short_description = forms.CharField(max_length=200, required=False)
-    detailed_description = forms.CharField(max_length=5000, required=False)
-    is_private = forms.BooleanField(required=False)
     encrypted = forms.BooleanField(required=False)
     file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
 
 
-class ReportForm(ModelForm):
-    class Meta:
-        model = Report
-        fields = ['title', 'encrypted',]
-
+class ReportForm(forms.Form):
+    title = forms.CharField(max_length=50, min_length=3)
+    short_description = forms.CharField(max_length=200, required=False)
+    detailed_description = forms.CharField(max_length=5000, required=False)
+    is_private = forms.BooleanField(required=False)
 
 
 """

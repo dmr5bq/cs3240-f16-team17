@@ -31,9 +31,6 @@ class Report(models.Model):
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
 
-    # move encrypted boolean to files instead of reports
-    encrypted = models.BooleanField(default=False)
-
     parent_folder = models.ForeignKey(Folder, related_name="reports")
     # reports must be given a parent folder upon creation
 
@@ -43,6 +40,15 @@ class FileUpload(models.Model):
     title = models.TextField(default='title')
     file = models.FileField(default=None)
     timestamp = models.DateTimeField(auto_now_add=True)
+    encrypted = models.BooleanField(default=False)
     report = models.ForeignKey(Report, related_name='files')
     # uploads must be given reports upon creation
 
+# Receive the pre_delete signal and delete the file associated with the model instance.
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
+
+@receiver(pre_delete, sender=FileUpload)
+def mymodel_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.file.delete(False)

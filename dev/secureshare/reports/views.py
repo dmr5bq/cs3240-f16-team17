@@ -18,8 +18,8 @@ from .forms import *
 from .models import *
 
 
-def handle_uploaded_file(f, report, count):
-    f_upload = FileUpload(title=f.name, file=f, report=report)
+def handle_uploaded_file(f, report, count, enc):
+    f_upload = FileUpload(title=f.name, file=f, report=report, encrypted=enc)
     f_upload.save()
     new_name = str(f_upload.id)
     os.rename(f_upload.file.path, settings.MEDIA_ROOT + '/' + new_name)
@@ -44,42 +44,34 @@ def index(request):
         return render(request, 'reports/index.html', {'form': form})
 
 
-'''
-def register_report(request):
+def register_report(request, folder_id):
     if request.method == 'POST':
         form = ReportForm(request.POST, request.FILES)
         if form.is_valid():
-            for count, f in enumerate(request.FILES.getlist('file_field')):
-                handle_uploaded_file(f, form.cleaned_data['title'] + str(count))
-            messages.success(request, form.cleaned_data['title'])
-            return HttpResponseRedirect('/reports:my_reports/')
-    else:
-        form = ReportForm()
-    form_title = 'Create New Report'
-    form_back = '/reports/my_reports/'
-    form_action = '/reports/all_reports/'
-    return render(request, 'users/general_form.html',
-                  {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
-
-'''
-
-
-def register_report(request, folder_id):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
             report = Report(title=form.cleaned_data['title'], short_description=form.cleaned_data['short_description'],
                             detailed_description=form.cleaned_data['detailed_description'],
-                            is_private=form.cleaned_data['is_private'], encrypted=form.cleaned_data['encrypted'],
+                            is_private=form.cleaned_data['is_private'],
                             owner=request.user, parent_folder=get_object_or_404(Folder, pk=folder_id))
             report.save()
-            for count, f in enumerate(request.FILES.getlist('file_field')):
-                handle_uploaded_file(f, report, count)
             messages.success(request, form.cleaned_data['title'])
             return HttpResponseRedirect('/reports/my_reports/')
     else:
-        form = UploadFileForm()
+        form = ReportForm()
     return render(request, 'reports/report.html', {'form': form})
+
+
+def upload_file_to_report(request, report_id):
+    report = get_object_or_404(Report, pk=report_id)
+    if request.user.is_authenticated and not report.is_private or report.owner == request.user or request.user.is_site_manager:
+        if request.method == 'POST':
+            form = UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                enc = form.cleaned_data['encrypted']
+                print(str(request.FILES.getlist('file_field')))
+                print(str(form.cleaned_data['file_field']))
+                for count, f in enumerate(request.FILES.getlist('file_field')):
+                    handle_uploaded_file(f, report, count, enc)
+    return redirect('reports:view_report', pk=report_id)
 
 
 def all_reports(request, detail='short'):

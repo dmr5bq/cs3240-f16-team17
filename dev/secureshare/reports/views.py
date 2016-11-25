@@ -63,6 +63,7 @@ def register_report(request):
 
 '''
 
+
 def register_report(request, folder_id):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -81,7 +82,6 @@ def register_report(request, folder_id):
     return render(request, 'reports/report.html', {'form': form})
 
 
-
 def all_reports(request, detail='short'):
 
     template_name = "reports/all_reports.html"
@@ -97,7 +97,6 @@ def all_reports(request, detail='short'):
     context['detail'] = '/detail/' in request.path
 
     return render(request, template_name, context)
-
 
 
 class MyReportListView(ListView):
@@ -121,6 +120,18 @@ class ReportDetailView(DetailView):
         context = super(ReportDetailView, self).get_context_data(**kwargs)
         context['file_list'] = FileUpload.objects.filter(report=get_object_or_404(Report, pk=self.kwargs['pk']))
         return context
+
+
+def edit_report(request, report_id):
+
+    report = get_object_or_404(Report, pk=report_id)
+    if request.user.is_site_manager or request.user == report.owner:
+        if request.method == "POST":
+            report.title = request.POST['title']
+            report.short_description = request.POST['sDesc']
+            report.detailed_description = request.POST['dDesc']
+            report.save()
+    return redirect(request.META['HTTP_REFERER'])
 
 
 def delete_report(request, report_id):
@@ -198,6 +209,13 @@ def download_file(request, file_id):
         response['Content-Disposition'] = 'attachment; filename="' + str(upload.title) + '"'
         return response
     return redirect('home:home')
+
+
+def delete_file(request, file_id):
+    upload = get_object_or_404(FileUpload, pk=file_id)
+    if request.user.is_authenticated and upload.report.owner == request.user or request.user.is_site_manager:
+        upload.delete()
+    return redirect(request.META['HTTP_REFERER'])
 
 
 def download_report(request, report_id):

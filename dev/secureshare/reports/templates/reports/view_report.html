@@ -1,6 +1,64 @@
 {% extends 'home/base.html' %}
 
 {% block content %}
+<script type="text/javascript">
+    function edit() {
+        var editing = (document.getElementById('editing').value === "t");
+        if (editing) { //create and submit form
+            var title = document.getElementById('title').value;
+            var sDesc = document.getElementById('sDesc').value;
+            var dDesc = document.getElementById('dDesc').value;
+
+            var action = document.getElementById('editingURL').value;
+            var token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+
+            var form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", action);
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'title');
+            hiddenField.setAttribute("value", title);
+            form.appendChild(hiddenField);
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'sDesc');
+            hiddenField.setAttribute("value", sDesc);
+            form.appendChild(hiddenField);
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'dDesc');
+            hiddenField.setAttribute("value", dDesc);
+            form.appendChild(hiddenField);
+
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", 'csrfmiddlewaretoken');
+            hiddenField.setAttribute("value", token);
+            form.appendChild(hiddenField);
+
+            document.body.appendChild(form);
+            form.submit();
+        } else { // change input fields
+            document.getElementById('editing').value = "t";
+            document.getElementById('editButton').innerHTML = "Save Changes";
+            document.getElementById('title').disabled="";
+            document.getElementById('sDesc').disabled="";
+            document.getElementById('dDesc').disabled="";
+        }
+    }
+
+</script>
+<style type="text/css">
+    .input-no-style {
+        border: none;
+        background: transparent;
+        color: #000;
+    }
+</style>
     <div class="row">
         <div class="col-xs-8 col-centered">
             {% if user.is_authenticated %}
@@ -9,7 +67,7 @@
                     <li class="list-group-item text-center">
                         <h2>
                             <span class="pull-left"><small>report:</small></span>
-                            {{ report.title }}
+                            <input type="text" id="title" class="input-no-style" value="{{ report.title }}" disabled="disabled"/>
                         </h2>
                     </li>
                     <li class="list-group-item">
@@ -26,26 +84,35 @@
                         {% endif %}
                     </li>
                     <li class="list-group-item">
-                        <strong>Short Description: </strong>{{ report.short_description }}
+                        <strong>Short Description: </strong>
+                        <input type="text" id="sDesc" class="input-no-style" value="{{ report.short_description }}" disabled="disabled"/>
                     </li>
                     <li class="list-group-item">
-                        <strong>Detailed Description: </strong>{{ report.detailed_description }}
+                        <strong>Detailed Description: </strong>
+                        <input type="text" id="dDesc" class="input-no-style" value="{{ report.detailed_description }}" disabled="disabled"/>
                     </li>
                 </div>
                 <br>
                 <div class="list-group">
-                    <li class="list-group-item list-group-item-info">Report content:</li>
+                    <li class="list-group-item list-group-item-info">
+                        Report content:
+                        <a href="" class="pull-right">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </a>
+                    </li>
                     {% if file_list %}
                         {% for file in file_list %}
                             <li class="list-group-item">
                             {{ file.title }}
-
                                     <a href="{% url 'reports:download_file' file_id=file.id %}" class="pull-right">
-                                        <span class="glyphicon glyphicon-download-alt">
-                                        </span>
+                                        <span class="glyphicon glyphicon-download-alt"></span>
                                     </a>
-                                    <!--<small>{{file.timestamp}}</small>-->
-
+                                    {% if user.is_site_manager or user == report.owner %}
+                                         <a href="{% url 'reports:delete_file' file_id=file.id %}" class="pull-right">
+                                             <span class="glyphicon glyphicon-trash">&nbsp;&nbsp;</span>
+                                         </a>
+                                    {% endif %}
+                                    <!--<small>{{file.timestamp}}glyphicon glyphicon-sunglasses</small>-->
                             </li>
                         {% endfor %}
                     {% endif %}
@@ -55,7 +122,12 @@
                     <a href="{% url 'reports:download_report' report_id=report.id %}" class="btn btn-primary">Download this report</a>
                 {% endif %}
                 {% if user.is_site_manager or user == report.owner %}
-                    <a href="{% url 'reports:delete_report' report_id=report.id %}" class="btn btn-danger pull-right">Delete this report</a>
+                    <a href="{% url 'reports:delete_report' report_id=report.id %}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span></a>
+
+                    <button onclick="edit()" id="editButton" class="btn btn-info pull-right" style="margin-right:8px;"><span class="glyphicon glyphicon-pencil"></span></button>
+                    <input type="hidden" id="editing" value="f">
+                    <input type="hidden" id="editingURL" value="{% url 'reports:edit_report' report_id=report.id %}">
+                    {% csrf_token %}
                 {% endif %}
             {% else %}
             <p>You do not have permission to view this page.</p>
@@ -63,6 +135,7 @@
             {% else %}
             <p>You must login to view this page.</p>
             {% endif %}
+
         </div>
     </div>
 {% endblock %}

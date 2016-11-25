@@ -1,0 +1,42 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-8 col-centered">
+            {% if user.is_authenticated and user.is_site_manager %}
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">
+                        All Documents:
+                        &nbsp;
+                        <div class="btn-group btn-group-xs">
+                            <a href="{% url 'reports:all_reports'%}" role="button" class="btn btn-default">
+                                All Reports
+                            </a>
+                        </div>
+                    </li>
+                    {% if documents_list %}
+                        {% for document in documents_list %}
+                            <a href="{% url 'reports:view_report' pk=document.report.id %}" class="list-group-item list-group-item-action">
+                                <span class="glyphicon glyphicon-file">&nbsp;</span>
+                                {{ document.title }}
+                                <!--{% if False %} document.is_encrypted-->
+                                <!--<span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>-->
+                                <!--{% endif %}-->
+
+                                <small><small>
+                                    <span class="pull-right">
+                                        {{ document.report.title }}
+                                    </span>
+                                </small></small>
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">There are no documents.</li>
+                    {% endif %}
+                </div>
+            {% else %}
+            <p>You must be a site manager to view documents.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -16,6 +16,11 @@
                                 Detail
                             </a>
                         </div>
+                        <div class="btn-group btn-group-xs">
+                            <a href="{% url 'reports:all_documents'%}" role="button" class="btn btn-default">
+                                All Documents
+                            </a>
+                        </div>
                     </li>
                     {% if reports_list %}
                         {% for report in reports_list %}

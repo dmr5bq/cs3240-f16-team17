@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^register/(?P<folder_id>[0-9]+)/$', views.register_report, name='register_report'),
 
     url(r'^file/download/(?P<file_id>[0-9]+)/$', views.download_file, name='download_file'),
+    url(r'^file/all_documents/$', views.all_documents, name='all_documents'),
 
     url(r'^report/(?P<pk>[0-9]+)/$', views.ReportDetailView.as_view(), name='view_report'),
     url(r'^report/(?P<report_id>[0-9]+)/delete/$', views.delete_report, name='delete_report'),

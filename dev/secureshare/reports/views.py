@@ -220,3 +220,11 @@ def download_report(request, report_id):
     return redirect('reports:view_report', pk=report_id)
 
 
+def all_documents(request):
+    if request.user.is_authenticated and request.user.is_site_manager:
+        template_name='reports/all_documents.html'
+        context = {}
+        context['documents_list'] = FileUpload.objects.all()
+        return render(request, template_name, context)
+    return redirect('home:home')
+

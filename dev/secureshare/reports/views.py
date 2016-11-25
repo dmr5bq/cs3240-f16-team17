@@ -3,14 +3,19 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.db.models import Q
+from django.conf import settings
+from django.contrib import messages
+
+from wsgiref.util import FileWrapper
+
+import os
+import zipfile
+
+import tarfile
+from io import BytesIO, StringIO
+
 from .forms import *
 from .models import *
-from django.contrib import messages
-import os
-from django.conf import settings
-
-"""
-"""
 
 
 def handle_uploaded_file(f, report, count):
@@ -122,7 +127,9 @@ def delete_report(request, report_id):
 
     report = get_object_or_404(Report, pk=report_id)
     if request.user.is_site_manager or request.user == report.owner:
+        parent_folder_id = report.parent_folder.id
         report.delete()
+        return redirect('reports:view_folder', folder_id=parent_folder_id)
     # add success message
     return redirect('home:home')
 
@@ -183,15 +190,33 @@ def delete_folder(request, folder_id):
     return redirect('home:home')
 
 
+def download_file(request, file_id):
+    upload = get_object_or_404(FileUpload, pk=file_id)
+    if request.user.is_authenticated and not upload.report.is_private or upload.report.owner == request.user or request.user.is_site_manager:
+        file = upload.file
+        response = HttpResponse(FileWrapper(file), content_type='application/force-download')
+        response['Content-Disposition'] = 'attachment; filename="' + str(upload.title) + '"'
+        return response
+    return redirect('home:home')
+
+
 def download_report(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
+    # check permissions
     if request.user.is_authenticated and not report.is_private or report.owner == request.user or request.user.is_site_manager:
         uploads = FileUpload.objects.filter(report=report)
-        for i in uploads:
-            print(i.title)
-            print(i.file.path)
-    # check permissions
-    # create zip of report files
-    return redirect('reports:view_report', pk=report_id,)
+        out = BytesIO()
+        tar = tarfile.open(report.title+'.tar.gz', mode="w:gz", fileobj = out)
+        for upload in uploads:
+            info = tarfile.TarInfo(name=upload.title)
+            tar.addfile(tarinfo=info, fileobj=FileWrapper(upload.file))
+        print(tar.getmembers())
+        tar.close()
+
+        response = HttpResponse(out.getvalue(), content_type='application/tgz')
+        response['Content-Length'] = os.path.getsize(report.title+'.tar.gz')
+        response['Content-Disposition'] = 'attachment; filename='+report.title+'.tar.gz'
+        return response
+    return redirect('reports:view_report', pk=report_id)
 
 

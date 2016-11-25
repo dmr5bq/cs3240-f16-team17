@@ -30,6 +30,8 @@ class Report(models.Model):
 
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
+
+    # move encrypted boolean to files instead of reports
     encrypted = models.BooleanField(default=False)
 
     parent_folder = models.ForeignKey(Folder, related_name="reports")

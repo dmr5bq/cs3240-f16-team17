@@ -39,9 +39,13 @@
                         {% for file in file_list %}
                             <li class="list-group-item">
                             {{ file.title }}
-                                <span class="pull-right">
-                                    <small>{{file.timestamp}}</small>
-                                </span>
+
+                                    <a href="{% url 'reports:download_file' file_id=file.id %}" class="pull-right">
+                                        <span class="glyphicon glyphicon-download-alt">
+                                        </span>
+                                    </a>
+                                    <!--<small>{{file.timestamp}}</small>-->
+
                             </li>
                         {% endfor %}
                     {% endif %}

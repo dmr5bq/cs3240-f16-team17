@@ -39,6 +39,19 @@
                         <li class="list-group-item">This user is in no groups.</li>
                     {% endif %}
                 </div>
+                <br>
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">Reports by this user:</li>
+                    {% if reports %}
+                        {% for report in reports %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'reports:view_report' pk=report.id %}">{{ report.title }}</a>
+                                </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">This user has no reports.</li>
+                    {% endif %}
+                </div>
             {% else %}
             <p>You must login to view this page.</p>
             {% endif %}

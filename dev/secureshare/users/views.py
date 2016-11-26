@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from .forms import *
 from .models import *
-from reports.models import RootFolder
+from reports.models import *
 
 
 def register(request):
@@ -143,6 +143,7 @@ def view_user(request, user_id):
     context = {}
     context['viewed_user'] = user
     context['groups'] = user.groups.all()
+    context['reports'] = Report.objects.filter(owner=user)
 
     return render(request, template_name, context)
 

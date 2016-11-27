@@ -1,6 +1,8 @@
 import re
 
 from django.db.models import Q
+from .models import Report
+from django.shortcuts import render_to_response
 
 
 def normalize(query_string,
@@ -28,4 +30,18 @@ def query(query_string, search_fields):
             query = query & or_q
     return query
 
-# def search( request ):
+
+def search( request ):
+    query = ''
+    found_records = None
+
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query = request.GET['q']
+
+        entry_query = query(query, ['title', 'body', ])
+
+        found_records = Report.objects.filter(entry_query)
+
+        return render_to_response(
+                                  'reports/search.html',
+                                  {'query_string': query, 'found_entries': found_records} )

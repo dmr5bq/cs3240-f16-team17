@@ -19,7 +19,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from . import OPTION_MESSAGES
 from .query import PostmanQuery
 from .utils import email_visitor, notify_user
-import encryption
+from .encryption import encrypt, decrypt
 
 # moderation constants
 STATUS_PENDING = 'p'
@@ -530,11 +530,11 @@ class Message(models.Model):
             body = models.TextField(_("body"), blank=True)
         """
 
-        def encrypt(key):
-           return encryption.encrypt(self.body, key)
+        def encrypt_message(key):
+           return encrypt(self.body, key)
 
-        def decrypt(key):
-            return encryption.decrypt(self.body, key)
+        def decrypt_message(key):
+            return decrypt(self.body, key)
 
 
 class PendingMessageManager(models.Manager):

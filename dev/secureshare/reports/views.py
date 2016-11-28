@@ -5,7 +5,7 @@ from django.views.generic.detail import DetailView
 from django.db.models import Q
 from django.conf import settings
 from django.contrib import messages
-from search import *
+from .search import *
 
 from wsgiref.util import FileWrapper
 

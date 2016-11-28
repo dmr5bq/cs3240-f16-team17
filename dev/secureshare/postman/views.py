@@ -30,6 +30,8 @@ from .forms import WriteForm, AnonymousWriteForm, QuickReplyForm, FullReplyForm
 from .models import Message, get_order_by
 from .utils import format_subject, format_body
 
+from .encryption import *
+
 login_required_m = method_decorator(login_required)
 csrf_protect_m = method_decorator(csrf_protect)
 

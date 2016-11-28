@@ -19,6 +19,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from . import OPTION_MESSAGES
 from .query import PostmanQuery
 from .utils import email_visitor, notify_user
+import encryption
 
 # moderation constants
 STATUS_PENDING = 'p'
@@ -279,6 +280,7 @@ class Message(models.Model):
     moderation_date = models.DateTimeField(_("moderated at"), null=True, blank=True)
     moderation_reason = models.CharField(_("rejection reason"), max_length=120, blank=True)
 
+    encrypted = models.BooleanField(default=False)
     objects = MessageManager()
 
     class Meta:
@@ -522,6 +524,17 @@ class Message(models.Model):
         elif auto is False:
             self.moderation_status = STATUS_REJECTED
             self.moderation_reason = final_reason
+
+        """
+            subject = models.CharField(_("subject"), max_length=SUBJECT_MAX_LENGTH)
+            body = models.TextField(_("body"), blank=True)
+        """
+
+        def encrypt(key):
+           return encryption.encrypt(self.body, key)
+
+        def decrypt(key):
+            return encryption.decrypt(self.body, key)
 
 
 class PendingMessageManager(models.Manager):

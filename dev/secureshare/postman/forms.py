@@ -27,6 +27,7 @@ from .utils import WRAP_WIDTH
 
 class BaseWriteForm(forms.ModelForm):
     """The base class for other forms."""
+    encrypted = forms.BooleanField(default=False)
     class Meta:
         model = Message
         fields = ('body',)
@@ -153,9 +154,8 @@ class WriteForm(BaseWriteForm):
     """The form for an authenticated user, to compose a message."""
     # specify help_text only to avoid the possible default 'Enter text to search.' of ajax_select v1.2.5
     recipients = CommaSeparatedUserField(label=(_("Recipients"), _("Recipient")), help_text='')
-
     class Meta(BaseWriteForm.Meta):
-        fields = ('recipients', 'subject', 'body')
+        fields = ('recipients', 'subject', 'body', 'encrypted')
 
 
 class AnonymousWriteForm(BaseWriteForm):
@@ -168,7 +168,7 @@ class AnonymousWriteForm(BaseWriteForm):
     recipients = CommaSeparatedUserField(label=(_("Recipients"), _("Recipient")), help_text='', max=1)  # one recipient is enough
 
     class Meta(BaseWriteForm.Meta):
-        fields = ('email', 'recipients', 'subject', 'body')
+        fields = ('email', 'recipients', 'subject', 'body', 'encrypted')
 
 
 class BaseReplyForm(BaseWriteForm):

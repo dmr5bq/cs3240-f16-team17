@@ -1,15 +1,9 @@
-import urllib.request as ur
 import requests
 import getpass
-import sys
-import urllib.request
 from os.path import expanduser
-import wget
 import getpass
 import mainGUI
-from simplecrypt import encrypt, decrypt
 from bs4 import BeautifulSoup
-from binascii import hexlify
 
 home = expanduser("~")
 
@@ -25,18 +19,13 @@ def download():
 	cookie = client.get(URL)  # sets cookie
 	soup = BeautifulSoup(cookie.text, "html.parser")
 	csrf = soup.find('input', {'name':'csrfmiddlewaretoken'})['value']
-	# print(csrf)
 	login_data = dict(username=username, password=password, csrfmiddlewaretoken=csrf, next='/')
 	client.post(URL, data=login_data)
-	# print(req)
 
 	### Get Reports ###
 	URL2 = 'http://localhost:8000/reports/my_reports/'
-	#cookie = client.get(URL2)  # sets cookie
-	#soup = BeautifulSoup(client.get(URL2).text, "html.parser")
-	#csrf = soup.find('input', {'name':'csrfmiddlewaretoken'})['value']
-	#login_data = dict(username=username, password=password, csrfmiddlewaretoken=csrf, next='/')
 	req2 = client.get(URL2)
+
 	### Parse Report String ###
 	downloaded = False
 	try:
@@ -127,13 +116,6 @@ def download():
 		print("\nLogin failed.")
 		download()
 	menu()
-	### Download File ###
-	#if yn is 'y':
-		#fi = wget.download(url)
-		#print("\n\nFile successfully downloaded to your current working directory.")
-	#	menu()
-	#else:
-	#	menu()
 
 def menu():
 	print("-----------------------------------------------------------------\n")

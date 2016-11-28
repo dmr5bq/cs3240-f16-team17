@@ -51,7 +51,6 @@ def decrypt_file():
             sk = sk + ('0' * (32 - len(sk)))
         else:
             sk = sk[0:32]
-
     if '.enc' == file[len(file)-4:len(file)]:
         try:
             with open(file, 'rb') as inFile:
@@ -67,6 +66,7 @@ def decrypt_file():
                     outFile.truncate(fSize)
                     outFile.close()
                 inFile.close()
+            updateList()
             return True
         except FileNotFoundError:
             messagebox.showerror("File Not Found", "File does not exist")
@@ -104,6 +104,7 @@ def encrypt_file():
                     outFile.write(AES_enc.encrypt(chunk))
                 outFile.close()
             inFile.close()
+        updateList()
         return True
     except FileNotFoundError:
         messagebox.showerror("File Not Found", "File does not exist")

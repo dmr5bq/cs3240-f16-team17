@@ -7,7 +7,7 @@ from tkinter import simpledialog
 from os.path import expanduser
 
 file = ""
-home = expanduser("~")
+home = os.getcwd()
 curpath = home
 root = Tk()
 e = Entry(root, width = 50)
@@ -52,12 +52,6 @@ def decrypt1():
         outp.write(plaintext)
     if (platform.mac_ver()[0] == ''):
         os.startfile(file, "open")
-
-def encrypt2(p, t):
-    return encrypt(p, t)
-
-def decrypt2(p, t):
-    return decrypt(p, t)
 
 def updateList():
     l.delete(0, END)

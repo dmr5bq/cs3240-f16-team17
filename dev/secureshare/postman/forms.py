@@ -27,7 +27,7 @@ from .utils import WRAP_WIDTH
 
 class BaseWriteForm(forms.ModelForm):
     """The base class for other forms."""
-    encrypted = forms.BooleanField(default=False)
+    encrypted = forms.BooleanField()
     class Meta:
         model = Message
         fields = ('body',)

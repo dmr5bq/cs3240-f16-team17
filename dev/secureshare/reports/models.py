@@ -31,9 +31,18 @@ class Report(models.Model):
     view_count = models.IntegerField(default=0)
 
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    favorited_by = models.ManyToManyField(User, related_name="favorites")
     is_private = models.BooleanField(default=False)
 
     parent_folder = models.ForeignKey(Folder, related_name="reports")
+
+    def has_access(self, user):
+        if not self.is_private:
+            return True
+        if user.is_authenticated:
+            if user.is_site_manager or self.owner == user:
+                return True
+        return False
 
 
 class FileUpload(models.Model):

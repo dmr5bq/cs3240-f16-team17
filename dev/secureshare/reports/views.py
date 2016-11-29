@@ -95,13 +95,14 @@ class ReportDetailView(DetailView):
         report.view_count += 1
         report.save()
         context['file_list'] = FileUpload.objects.filter(report=report)
+        context['favorited'] = self.request.user in report.favorited_by.all()
         return context
 
 
 def edit_report(request, report_id):
 
     report = get_object_or_404(Report, pk=report_id)
-    if request.user.is_site_manager or request.user == report.owner:
+    if request.user.is_authenticated and request.user.is_site_manager or request.user == report.owner:
         if request.method == "POST":
             report.title = request.POST['title']
             report.short_description = request.POST['sDesc']
@@ -119,12 +120,26 @@ def edit_report(request, report_id):
 def delete_report(request, report_id):
 
     report = get_object_or_404(Report, pk=report_id)
-    if request.user.is_site_manager or request.user == report.owner:
+    if request.user.is_authenticated and request.user.is_site_manager or request.user == report.owner:
         parent_folder_id = report.parent_folder.id
         title = report.title
         report.delete()
         messages.success(request, "Report \"" + title + "\" has been deleted.")
         return redirect('reports:view_folder', folder_id=parent_folder_id)
+    return redirect('home:home')
+
+
+def favorite_report(request, report_id):
+
+    report = get_object_or_404(Report, pk=report_id)
+    if report.has_access(request.user):
+        if report in request.user.favorites.all():
+            request.user.favorites.remove(report)
+            messages.success(request, "Report \"" + report.title + "\" has been unfavorited.")
+        else:
+            request.user.favorites.add(report)
+            messages.success(request, "Report \"" + report.title + "\" has been favorited.")
+        return redirect('reports:view_report', pk=report_id)
     return redirect('home:home')
 
 

@@ -177,6 +177,7 @@
                     <input type="hidden" id="editingURL" value="{% url 'reports:edit_report' report_id=report.id %}">
                     {% csrf_token %}
                 {% endif %}
+                <a href="{% url 'reports:favorite_report' report_id=report.id %}" class="btn btn-warning pull-right" style="margin-right:8px;{% if favorited %}color:black;{% endif %}"><span class="glyphicon glyphicon-star"></span></a>
             {% else %}
             <p>You do not have permission to view this page.</p>
             {% endif %}

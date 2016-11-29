@@ -28,11 +28,12 @@ class Report(models.Model):
     detailed_description = models.TextField(default="", max_length=5000)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    view_count = models.IntegerField(default=0)
+
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
 
     parent_folder = models.ForeignKey(Folder, related_name="reports")
-    # reports must be given a parent folder upon creation
 
 
 class FileUpload(models.Model):

@@ -139,7 +139,18 @@ def favorite_report(request, report_id):
         else:
             request.user.favorites.add(report)
             messages.success(request, "Report \"" + report.title + "\" has been favorited.")
-        return redirect('reports:view_report', pk=report_id)
+        return redirect(request.META['HTTP_REFERER'])
+    return redirect('home:home')
+
+
+def view_favorites(request):
+
+    template_name = "reports/view_favorites.html"
+
+    if request.user.is_authenticated:
+        context = {}
+        context['favorites_list'] = request.user.favorites.all()
+        return render(request, template_name, context)
     return redirect('home:home')
 
 

@@ -30,6 +30,10 @@
                         <a href='' data-toggle="modal" data-target="#newFolderModal" class="pull-right">
                             <span class="glyphicon glyphicon-folder-open">&nbsp;&nbsp;</span>
                         </a>
+
+                        <a href="{% url 'reports:view_favorites' %}" class="pull-right">
+                            <span class="glyphicon glyphicon-star">&nbsp;&nbsp;</span>
+                        </a>
                     </li>
                     {% if folder_list %}
                         {% for folder in folder_list %}
@@ -48,9 +52,6 @@
                                 <span class="glyphicon glyphicon-file">&nbsp;</span>
                                 {{ report.title }}
                                 &nbsp;
-                                <small><small>
-                                    made on {{ report.timestamp }}
-                                </small></small>
                                 {% if report.is_private %}
                                 <span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>
                                 {% endif %}

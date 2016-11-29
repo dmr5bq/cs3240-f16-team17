@@ -1,0 +1,44 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-xs-8 col-centered">
+            {% if user.is_authenticated %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-info">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <strong>Success!</strong>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <div class="list-group">
+                    <li class="list-group-item list-group-item-info">
+                        Your Favorites:
+                    </li>
+                    {% if favorites_list %}
+                        {% for report in favorites_list %}
+                            <a href="{% url 'reports:view_report' pk=report.id %}" class="list-group-item list-group-item-action">
+                                <span class="glyphicon glyphicon-file">&nbsp;</span>
+                                {{ report.title }}
+                                &nbsp;
+                                <small><small>
+                                    by {{ report.owner.email }}
+                                </small></small>
+                                {% if report.is_private %}
+                                <span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">You have no favorites.</li>
+                    {% endif %}
+                </div>
+            {% else %}
+            <p>You must login to view this page.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

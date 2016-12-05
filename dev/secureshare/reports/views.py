@@ -105,8 +105,10 @@ def edit_report(request, report_id):
     if request.user.is_authenticated and request.user.is_site_manager or request.user == report.owner:
         if request.method == "POST":
             report.title = request.POST['title']
-            report.short_description = request.POST['sDesc']
-            report.detailed_description = request.POST['dDesc']
+            print(request.POST['sDesc'])
+            print(request.POST['sDesc'][:200])
+            report.short_description = request.POST['sDesc'][:200]
+            report.detailed_description = request.POST['dDesc'][:5000]
             print(request.POST['privacy'])
             if request.POST['privacy'] == "p":
                 report.is_private = True

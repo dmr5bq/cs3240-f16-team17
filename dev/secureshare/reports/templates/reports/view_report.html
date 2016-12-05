@@ -6,8 +6,8 @@
         var editing = (document.getElementById('editing').value === "t");
         if (editing) { //create and submit form
             var title = document.getElementById('title').value;
-            var sDesc = document.getElementById('sDesc').value;
-            var dDesc = document.getElementById('dDesc').value;
+            var sDesc = document.getElementById('sDesc').innerText;
+            var dDesc = document.getElementById('dDesc').innerText;
             var privacy = document.getElementById('privacy').value;
 
             var action = document.getElementById('editingURL').value;
@@ -54,10 +54,10 @@
             document.getElementById('editButton').innerHTML = "Save Changes";
             document.getElementById('title').disabled="";
             document.getElementById('title').removeAttribute("class");
-            document.getElementById('sDesc').disabled="";
-            document.getElementById('sDesc').removeAttribute("class");
-            document.getElementById('dDesc').disabled="";
-            document.getElementById('dDesc').removeAttribute("class");
+            document.getElementById('sDesc').contentEditable = true;
+            document.getElementById('sDesc').style = "border:0.5px solid rgb(230, 230, 230);";
+            document.getElementById('dDesc').contentEditable = true;
+            document.getElementById('dDesc').style = "border:0.5px solid rgb(230, 230, 230);";
             document.getElementById('privacy').removeAttribute("disabled");
             document.getElementById('privacy').removeAttribute("class");
         }
@@ -82,7 +82,7 @@
     }
 </style>
     <div class="row">
-        <div class="col-xs-8 col-centered">
+        <div class="col-xs-12 col-centered">
             {% if user.is_authenticated %}
             {% if user.is_site_manager or user == report.owner or not report.is_private %}
                 {% if messages %}
@@ -127,11 +127,17 @@
                     </li>
                     <li class="list-group-item">
                         <strong>Short Description: </strong>
-                        <input type="text" id="sDesc" class="input-no-style" value="{{ report.short_description }}" disabled="disabled" maxlength="200"/>
+                        <br>
+                        <div id="sDesc" contenteditable="false" style="word-wrap:break-word;">
+                            {{ report.short_description }}
+                        </div>
                     </li>
                     <li class="list-group-item">
                         <strong>Detailed Description: </strong>
-                        <input type="text" id="dDesc" class="input-no-style" value="{{ report.detailed_description }}" disabled="disabled" maxlength="5000"/>
+                        <br>
+                        <div id="dDesc" contenteditable="false" style="word-wrap:break-word;">
+                            {{ report.detailed_description }}
+                        </div>
                     </li>
                     <li class="list-group-item">
                         <strong>View Count: </strong>

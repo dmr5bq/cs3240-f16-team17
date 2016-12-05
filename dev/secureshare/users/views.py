@@ -26,11 +26,6 @@ def register(request):
     return render(request, 'users/general_form.html', {'form': form, 'form_title':form_title, 'form_back':form_back, 'form_action':form_action})
 
 
-def profile(request):
-    template_name = 'users/profile.html'
-    return render(request, template_name, {})
-
-
 def change_password(request):
     if request.method == 'POST':
         form = ChangePasswordForm(user=request.user, data=request.POST)
@@ -38,11 +33,11 @@ def change_password(request):
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
-            return redirect('users:profile')
+            return redirect('home:home')
     else:
         form = ChangePasswordForm(user=request.user, data=request.POST)
     form_title = 'Change password'
-    form_back = '/users/profile/'
+    form_back = request.META['HTTP_REFERER']
     form_action = '/users/change_password/'
     return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_back':form_back, 'form_action':form_action})
 
@@ -54,11 +49,11 @@ def join_group(request):
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
-            return redirect('users:profile')
+            return redirect('home:home')
     else:
         form = JoinGroupForm(user=request.user, data=request.POST)
     form_title = 'Join New Group'
-    form_back = '/users/profile/'
+    form_back = request.META['HTTP_REFERER']
     form_action = '/users/join_group/'
     return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
@@ -70,11 +65,11 @@ def leave_group(request):
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
-            return redirect('users:profile')
+            return redirect('home:home')
     else:
         form = LeaveGroupForm(user=request.user, data=request.POST)
     form_title = 'Join New Group'
-    form_back = '/users/profile/'
+    form_back = request.META['HTTP_REFERER']
     form_action = '/users/leave_group/'
     return render(request, 'users/general_form.html', {'form': form, 'form_title': form_title, 'form_back': form_back, 'form_action': form_action})
 
@@ -110,11 +105,11 @@ def create_group(request):
             user = form.save(commit=False)
             user.save()
             update_session_auth_hash(request, user)
-            return redirect('users:profile')
+            return redirect('home:home')
     else:
         form = CreateGroupForm(user=request.user, data=request.POST)
     form_title = 'Create New Group'
-    form_back = '/users/profile/'
+    form_back = request.META['HTTP_REFERER']
     form_action = '/users/create_group/'
     return render(request, 'users/general_form.html', {'form':form, 'form_title':form_title, 'form_back':form_back,'form_action':form_action})
 

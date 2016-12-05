@@ -68,23 +68,28 @@
                     <li class="dropdown">
                           <a class="dropdown-toggle" data-toggle="dropdown" href="#">Groups</a>
                           <ul class="dropdown-menu">
-                                <li><a href="{% url 'users:my_groups' %}">My Groups</a></li>
-                                <li><a href="{% url 'users:all_groups' %}">All Groups</a></li>
-                                <li><a href="{% url 'reports:view_favorites' %}">favorites</a></li>
+                              <li><a href="{% url 'users:my_groups' %}">My Groups</a></li>
+                              {% if user.is_site_manager %}
+                              <li><a href="{% url 'users:all_groups' %}">All Groups</a></li>
+                              {% endif %}
                           </ul>
                     </li>
-
 
                     <li><a href="{% url 'postman:inbox' %}">Messages{% if unread_count %} <strong>({{ unread_count }})</strong>{% endif %}</a></li>
 
                     {% if user.is_site_manager %}
                     <li><a href="{% url 'users:all_users' %}">Users</a></li>
-
-
                     {% endif %}
 
-                    <li><a href={% url 'users:profile' %}>Account</a></li>
-                    <li><a href={% url 'users:logout' %}>Logout</a></li>
+                    <li class="dropdown">
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                              <span class="glyphicon glyphicon-user"></span>
+                          </a>
+                          <ul class="dropdown-menu">
+                              <li><a href="{% url 'users:change-password' %}">Change Passowrd</a></li>
+                              <li><a href={% url 'users:logout' %}>Logout</a></li>
+                          </ul>
+                    </li>
                 {% else %}
                     <li><a href={% url 'users:login' %}>Login</a></li>
 

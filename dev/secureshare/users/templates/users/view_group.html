@@ -51,7 +51,7 @@
                     <a href="{% url 'users:add_user_to_group' group_id=group.id %}" class="list-group-item list-group-item-action">Add a user to this group</a>
                 {% endif %}
                 {% if user_in_group %}
-                    <a href="{% url 'users:leave_group_by_id' group_id=group.id user_id=user.id %}" class="list-group-item list-group-item-action list-group-item-danger">Leave this group</a>
+                    <a href="{% url 'users:leave_group_by_id' group_id=group.id user_id=user.id %}" class="list-group-item list-group-item-action list-group-item-danger" style="color:red;">Leave this group</a>
                 {% endif %}
                  </div>
             {% else %}

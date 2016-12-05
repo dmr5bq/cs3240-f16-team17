@@ -280,7 +280,7 @@ class Message(models.Model):
     moderation_date = models.DateTimeField(_("moderated at"), null=True, blank=True)
     moderation_reason = models.CharField(_("rejection reason"), max_length=120, blank=True)
 
-    encrypted = models.BooleanField(initial=False, required=False)
+    encrypted = models.BooleanField(default=False)
     objects = MessageManager()
 
     class Meta:

@@ -10,8 +10,6 @@ def normalize(query_string, # this method was written based on the method found 
                     normspace=re.compile(r'\s{2,}').sub):
     return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
 
-
-
 def query(query_string, search_fields):
 
     query = None

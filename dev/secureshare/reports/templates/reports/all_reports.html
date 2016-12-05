@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-xs-8 col-centered">
+        <div class="col-xs-12 col-centered">
             {% if user.is_authenticated %}
                 <form type="get" action="." style="margin: 0">
                     <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
@@ -20,11 +20,13 @@
                                 Detail
                             </a>
                         </div>
+                        {% if user.is_site_manager %}
                         <div class="btn-group btn-group-xs">
                             <a href="{% url 'reports:all_documents'%}" role="button" class="btn btn-default">
                                 All Documents
                             </a>
                         </div>
+                        {% endif %}
                     </li>
                     {% if reports_list %}
                         {% for report in reports_list %}

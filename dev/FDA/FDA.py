@@ -14,7 +14,7 @@ def download():
 	username = input("Username: ")
 	password = getpass.getpass("Password: ")
 
-	URL = 'http://localhost:8000/users/login/'
+	URL = 'http://secureshare17.herokuapp.com/users/login/'
 	client = requests.session()
 	cookie = client.get(URL)  # sets cookie
 	soup = BeautifulSoup(cookie.text, "html.parser")
@@ -23,9 +23,8 @@ def download():
 	client.post(URL, data=login_data)
 
 	### Get Reports ###
-	URL2 = 'http://localhost:8000/reports/my_reports/'
+	URL2 = 'http://secureshare17.herokuapp.com/reports/my_reports/'
 	req2 = client.get(URL2)
-
 	### Parse Report String ###
 	downloaded = False
 	try:
@@ -57,7 +56,7 @@ def download():
 			if(navigateTo in linkDict):
 				if('/reports/folder/' in linkDict[navigateTo]):
 					print('Now browsing folder: ', navigateTo)
-					req2 = client.get('http://localhost:8000' + linkDict[navigateTo])
+					req2 = client.get('http://secureshare17.herokuapp.com' + linkDict[navigateTo])
 					start = req2.text.find('<li class=\"list-group-item list-group-item-info\">')
 					temp = req2.text[start:req2.text.find('</div>', start, len(req2.text) - 1)]
 					parseStr = temp.splitlines()
@@ -78,7 +77,7 @@ def download():
 					print('\n')
 				elif('/reports/report/' in linkDict[navigateTo]):
 					print('Now browsing report: ', navigateTo)
-					req2 = client.get('http://localhost:8000' + linkDict[navigateTo])
+					req2 = client.get('http://secureshare17.herokuapp.com' + linkDict[navigateTo])
 					start = req2.text.find('<li class=\"list-group-item list-group-item-info\">')
 					temp = req2.text[start + 49:]
 					start = temp.find('<li class=\"list-group-item list-group-item-info\">')
@@ -101,7 +100,7 @@ def download():
 					print('\n')
 				else:
 					print('Downloading...')
-					downLink = 'http://localhost:8000' + linkDict[navigateTo]
+					downLink = 'http://secureshare17.herokuapp.com' + linkDict[navigateTo]
 					req2 = client.get(downLink, stream=True)
 					with open(navigateTo, 'wb') as file:
 						for chunk in req2.iter_content(chunk_size=1024):

@@ -34,7 +34,7 @@
                 <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-default">Login</button>
-            <input type="hidden" name="next" value='home:home' />
+            <input type="hidden" name="next" value="{% url 'home:home' %}" />
         </form>
         <br>
         Need an account? Register <a href="{% url 'users:register' %}">here</a>

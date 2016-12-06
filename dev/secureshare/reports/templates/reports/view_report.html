@@ -172,9 +172,6 @@
                     {% endif %}
                 </div>
                 <br>
-                {% if not report.is_private or user.is_site_manager or user == report.owner %}
-                    <a href="{% url 'reports:download_report' report_id=report.id %}" class="btn btn-primary">Download this report</a>
-                {% endif %}
                 {% if user.is_site_manager or user == report.owner %}
                     <a href="{% url 'reports:delete_report' report_id=report.id %}" class="btn btn-danger pull-right"><span class="glyphicon glyphicon-trash"></span></a>
 

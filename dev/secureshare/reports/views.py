@@ -256,3 +256,40 @@ def all_documents(request):
         return render(request, template_name, context)
     return redirect('home:home')
 
+
+def search(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            template_name = 'reports/search_results.html'
+
+            output = Report.objects.all()
+
+            # initial location and permission filtering
+            if request.POST['search_location'] == 'my_reports':
+                output = output.filter(owner=request.user)
+            elif not request.user.is_site_manager:
+                output = output.filter(is_private=False)
+
+            # filter by keywords
+            keywords = request.POST['title_keywords'].split(' ')
+            for word in keywords:
+                output = output.filter(title__contains=word)
+
+            keywords = request.POST['sdesc_keywords'].split(' ')
+            for word in keywords:
+                output = output.filter(short_description__contains=word)
+
+            keywords = request.POST['ddesc_keywords'].split(' ')
+            for word in keywords:
+                output = output.filter(detailed_description__contains=word)
+
+            context = {}
+            context['reports_list'] = output
+            return render(request, template_name, context)
+        elif request.method == "GET":
+            template_name = 'reports/search.html'
+            context = {}
+            context['my_reports'] = 'HTTP_REFERER' in request.META.keys() and '/my_reports/' in request.META['HTTP_REFERER']
+            return render(request, template_name, context)
+    return redirect('home:home')
+

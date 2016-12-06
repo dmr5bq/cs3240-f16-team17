@@ -4,10 +4,6 @@
     <div class="row">
         <div class="col-xs-12 col-centered">
             {% if user.is_authenticated %}
-                <form type="get" action="." style="margin: 0">
-                    <input  id="search_box" type="text" name="search_box"  placeholder="Search..." >
-                    <button id="search_submit" type="submit" >Submit</button>
-                </form>
                 <div class="list-group">
                     <li class="list-group-item list-group-item-info">
                         All Reports:
@@ -27,6 +23,9 @@
                             </a>
                         </div>
                         {% endif %}
+                        <a href="{% url 'reports:search' %}" class="pull-right">
+                            <span class="glyphicon glyphicon-search">&nbsp;</span>
+                        </a>
                     </li>
                     {% if reports_list %}
                         {% for report in reports_list %}

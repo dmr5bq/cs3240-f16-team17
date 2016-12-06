@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'home/base.html' %}
 
-</body>
-</html>
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-centered">
+        {% if user.is_authenticated %}
+            <div class="list-group">
+                <li class="list-group-item text-center">
+                    <h2>
+                        Search
+                    </h2>
+                </li>
+            </div>
+            <br>
+            <form action="{% url 'reports:search' %}" method="post">
+                {% csrf_token %}
+                <div class="list-group">
+                    <li class="list-group-item">
+                        Search in:
+                        <br>
+                        <label class="radio-inline">
+                            <input type="radio" name="search_location" value="my_reports"{% if my_reports %}checked{% endif %}>My Reports
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="search_location" value="all_reports"{% if not my_reports %}checked{% endif %}>All Reports
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Title:
+                        <input type="text" class="form-control" placeholder="keywords..."  name="title_keywords">
+                    </li>
+                    <li class="list-group-item">
+                        Short Description:
+                        <input type="text" class="form-control" placeholder="keywords..."  name="sdesc_keywords">
+                    </li>
+                    <li class="list-group-item">
+                        Detailed Description:
+                        <input type="text" class="form-control" placeholder="keywords..."  name="ddesc_keywords">
+                    </li>
+                </div>
+                <br>
+                <div class="list-group">
+                    <input type="submit" class="btn btn-primary pull-right" value="submit">
+                </div>
+            </form>
+            <br>
+        {% else %}
+        <p>You must login to view this page.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

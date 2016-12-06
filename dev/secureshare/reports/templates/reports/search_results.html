@@ -1,0 +1,41 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-centered">
+        {% if user.is_authenticated %}
+            <div class="list-group">
+                <li class="list-group-item text-center">
+                    <h2>
+                        Search Results
+                    </h2>
+                </li>
+            </div>
+            <br>
+            <div class="list-group">
+                <li class="list-group-item list-group-item-info">
+                    &nbsp;
+                    <a href="{% url 'reports:search' %}" class="pull-right">
+                        <small>NEW SEARCH</small>
+                    </a>
+                </li>
+                {% if reports_list %}
+                    {% for report in reports_list %}
+                        <a href="{% url 'reports:view_report' pk=report.id %}" class="list-group-item list-group-item-action">
+                            <span class="glyphicon glyphicon-file">&nbsp;</span>
+                            {{ report.title }}
+                            {% if report.is_private %}
+                            <span class="pull-right glyphicon glyphicon-eye-close">&nbsp;</span>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <li class="list-group-item">No reports match your query.</li>
+                {% endif %}
+            </div>
+        {% else %}
+        <p>You must login to view reports.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

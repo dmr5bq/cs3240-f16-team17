@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^all_reports/detail/$', views.all_reports, name='all_reports_detail'),
     url(r'^my_reports/$', views.MyReportListView.as_view(), name='my_reports'),
     url(r'^favorites/$', views.view_favorites, name='view_favorites'),
+    url(r'^search/$', views.search, name='search'),
 ]
 
